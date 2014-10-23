@@ -1,0 +1,5019 @@
+@@ @onCampaignLoad
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[defineFunction("GSTN", "GetSettingTokenName@Lib:Rules"),ignoreOutput]
+[defineFunction("GL", "GetLabel@Lib:Rules"),ignoreOutput]
+[defineFunction("SL", "SetLabel@Lib:Rules"),ignoreOutput]
+[defineFunction("FC","FlipClass@Lib:Rules"),ignoreOutput]
+[defineFunction("FlipClass","FlipClass@Lib:Rules"),ignoreOutput]
+[defineFunction("GLL","GetLabelLanguage@Lib:Rules"),ignoreOutput]
+[defineFunction("ELP","EditProperty@Lib:Rules"),ignoreOutput]
+[defineFunction("ML","ManageLists@Lib:Rules")]
+[defineFunction("SC","SettingConfigure@Lib:Rules")]
+[defineFunction("GCIL","GetConfigItemLine@Lib:Rules")]
+[defineFunction("SPLIT","Split@Lib:Rules")]
+[defineFunction("SortList","SortList@Lib:Rules")]
+[defineFunction("DD","disectDie@Lib:Rules")]
+[defineFunction("GD","GetDescription@Lib:Rules"),ignoreOutput]
+[defineFunction("AttrModDropdown","AttrModDropdown@Lib:Rules")]
+[defineFunction("GearAddDropdown","GearAddDropdown@Lib:Rules")]
+[defineFunction("AttrAddDropdown","AttrAddDropdown@Lib:Rules")]
+[defineFunction("AttrRepDropdown","AttrRepDropdown@Lib:Rules")]
+[defineFunction("ModiferDropdown","ModiferDropdown@Lib:Rules")]
+[defineFunction("AdderDropdown","AdderDropdown@Lib:Rules")]
+[defineFunction("ReplacerDropdown","ReplacerDropdown@Lib:Rules")]
+[defineFunction("ABGetSkillTypeList","ABGetSkillTypeList@Lib:Rules")]
+[defineFunction("ABPowerPointMethodList","ABPowerPointMethodList@Lib:Rules")]
+[defineFunction("GetSkillList","GetSkillList@Lib:Rules")]
+[defineFunction("GetConfigItemHeader","GetConfigItemHeader@Lib:Rules")]
+[defineFunction("ABSelectPowers","ABSelectPowers@Lib:Rules")]
+[defineFunction("GetCSS","GetCSS@Lib:Rules")]
+
+[defineFunction("GetSettingTraitList","GetSettingTraitList@Lib:Rules")]
+
+[defineFunction("SPU","SettingPropUpdate@Lib:Rules")]
+
+[defineFunction("SP2TM","SettingProp2TokenModifer@Lib:Rules")]
+[defineFunction("GMBTP","GetModifersByTokenProp@Lib:Rules")]
+[defineFunction("GTM","GetTokenModifiers@Lib:Rules")]
+
+[defineFunction("DropdownFromList","DropdownFromList@Lib:Rules")]
+[defineFunction("TableHeader","TableHeader@Lib:Rules")]
+[defineFunction("TableRow","TableRow@Lib:Rules")]
+[defineFunction("GetGearAspectTable","GetGearAspectTable@Lib:Rules")]
+
+[defineFunction("GetCombatStatesDropdown","GetCombatStatesDropdown@Lib:Rules")]
+[defineFunction("ConditionalDropDown","ConditionalDropDown@Lib:Rules")]
+[defineFunction("DefaultDropdown","DefaultDropdown@Lib:Rules")]
+
+[defineFunction("GSP","GetSettingProp@Lib:Rules")]
+[defineFunction("GTP","GetTokenProp@Lib:Rules")]
+[defineFunction("STP","SetTokenProp@Lib:Rules")]
+
+[defineFunction("CheckBoxList","CheckBoxList@Lib:Rules")]
+[defineFunction("GDFN","GetDieFromNum@Lib:Rules")]
+[defineFunction("TraitRadios","TraitRadios@Lib:Rules")]
+[defineFunction("GetPropMods","GetPropMods@Lib:Rules")]
+[defineFunction("TokenRecompute","TokenRecompute@Lib:Rules")]
+[defineFunction("GPP","GetPropertyPrefix@Lib:Rules")]
+[defineFunction("GTFP","GetTypeFromPrefix@Lib:Rules")]
+[defineFunction("GTTM","GetTokenTraitMod@Lib:Rules")]
+[defineFunction("DiceMath","DiceMath@Lib:Rules")]
+[defineFunction("TWTL","TokenWizardTraitLine@Lib:Rules")]
+[defineFunction("TWSL","TokenWizardStatLine@Lib:Rules")]
+[defineFunction("TWRL","TokenWizardRollLine@Lib:Rules")]
+
+[defineFunction("TableFromJSON","TableFromJSON@Lib:Rules")]
+
+[defineFunction("DieNum","DieNum@Lib:Rules")]
+[defineFunction("SetTokenArcaneStuff","SetTokenArcaneStuff@Lib:Rules")]
+
+<!-- Character Sheet Functions -->
+[defineFunction("GetStateList","GetStateList@lib:Rules")]
+[defineFunction("TraitWithState","TraitWithState@lib:Rules")]
+[defineFunction("RecomputeTokenTraits","RecomputeTokenTraits@lib:Rules")]
+[defineFunction("TraitTest","TraitTest@lib:Rules")]
+[defineFunction("GetModList","GetModList@Lib:Rules")]
+[defineFunction("Debug","Debug@Lib:Rules")]
+[defineFunction("GearInputFields","GearInputFields@Lib:Rules")]
+[defineFunction("ParseWeaponDamageString","ParseWeaponDamageString@Lib:Rules")]
+[defineFunction("GetGearByCategory","GetGearByCategory@Lib:Rules")]
+
+!!
+@@ @Launch Bug Tracker
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1 - Character Sheet;tooltip=;minWidth=
+Google Docs:<br>
+<a href="https://docs.google.com/document/d/1urq74nZ4NCdEL0r8X9YuXqfeb2OALsHbIYVWzprOZTI/edit">Bugs and To Dos</a>
+<br>
+<a href= "https://docs.google.com/document/d/1hemoM0-Raz3h2umQnD-IwVjWvajo92fdcOy7XcXTOYA/edit">Notes</a>
+
+!!
+@@ @PlayerPanel
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1 - Character Sheet;tooltip=;minWidth=
+[h:macroName=getMacroName()]
+[h:macroName=macroName+"@this"]
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:id=json.get(macro.args,"id")]
+[h:switchToken(id)]
+
+[h:selected=json.get(macro.args,"selected")]
+[h:selected=if(selected=="","Gear",selected)]
+
+[h:lables = "Action,Cards,Dice,Gear,Edit,History"]
+[h:lableMacro=selected+"@this"]
+[h:lableMacroArgs=json.set("","id",id)]
+[r:states=GetStateList(id)]
+
+[h: class = "oddRow"]
+[h:class2=FlipClass(class)]
+[h:td1="<th>"]
+[h:td2="<td>"]
+
+[dialog(getMacroName(),"width=500; height=200"): {
+  <html>
+    <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+    <body>
+      <h1>
+        [r:getName(id)] 
+        [r,foreach(state,states,""), code:{ <img src='[r:getStateImage(state,20)]' alt="[r:state]"></img> }]
+      </h1>  
+      <table border="1" width="100%"><tr>
+        [foreach(l,lables,""), code:{
+          [h:args=json.set("","id",id,"selected",l)]
+          [h: linkit=macroLinkText(macroName, "gm",args)]
+          [r:td=if(l==selected,td1,td2)]  
+          <a href="[r:linkit]">[r:GL(l)]</a></td>
+        }]
+        </tr>
+        <tr>
+          <td colspan="[r:listCount(lables)]">
+             [macro(lableMacro):lableMacroArgs]
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+}]
+
+!!
+@@ @Action
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=1.1 - Player Sub-Panels;tooltip=;minWidth=
+[h:id=json.get(macro.args,"id")]
+<!-- might consider a way to change in the future -->
+[h:audience="all"]
+
+[h,if(0), code:{
+  [h:RecomputeTokenTraits(id,"Attributes")]
+  [h:RecomputeTokenTraits(id,"Skills")]
+};{}]
+<!-- table is 
+Attributes | Edges
+Skills | Hindrances
+Rolls | Gear
+        | Powers
+-->
+[h:settingAttrs=decode(getLibProperty("Attributes",GSTN()))]
+[h:settingSkills=decode(getLibProperty("Skills",GSTN()))]
+[h:settingRolls=decode(getLibProperty("Rolls",GSTN()))]
+[h:settingAttackActions=decode(getLibProperty("AttackActions",GSTN()))]
+[h:settingStats=decode(getLibProperty("DerivedStats",GSTN()))]
+[h:tokenAttrs=decode(getProperty("Attributes",id))]
+[h:tokenSkills=decode(getProperty("Skills",id))]
+[h:traitRollMacro="TraitTest@this"]
+[h:traitRollArgs=json.set("","id",id,"numRolls",4)]
+
+<!-- weed unskilled -->
+[h,foreach(prop,settingSkills,"</tr><tr>"), code:{
+  [h:value=getStrProp(tokenSkills,prop)]
+  [if(value=="d4e-2"), code:{ 
+    [h:tokenSkills=deleteStrProp(tokenSkills,prop)]
+    [h:settingSkills=listDelete(settingSkills,listFind(settingSkills, prop))]
+  };{}]
+}]
+
+<h3>Action Screen</h3>
+     <table width="100%">
+       <tr><th>Traits and Rolls</th><th>Mods, Gear, Abilities</th></tr>
+       <tr>
+         <td valign="top"><!-- first column -->
+           <table width="100%">
+             <tr><td>Attributes</td><td>[r,foreach(prop,settingAttrs,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [h:value=trim(TraitWithState(id,prop))]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value]</a>
+               }]
+             </td></tr>
+             <tr><td>Skills</td><td>[r,foreach(prop,settingSkills,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [h:value=trim(TraitWithState(id,prop))]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value]</a>
+               }]
+             </td></tr>
+             <tr><td>Rolls</td><td>[r,foreach(prop,settingRolls,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [h:value=trim(TraitWithState(id,prop))]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value]</a>
+               }]
+             </td></tr>
+             <tr><td>Actions</td><td>[r,foreach(prop,settingAttackActions,", "), code:{
+               [r:GL(prop)]
+               }]
+             </td></tr>
+           </table>
+         </td>
+         <td valign="top"><!-- second column -->
+             <table width="100%"><tr><td align="center" colspan="2">Stats
+             [r,foreach(prop,settingStats,""), code:{
+               </td></tr><tr><td>
+                 [h:value=getProperty(prop,id)]
+                 [h:value=TraitWithState(id,prop)]
+                 [r:GL(prop)]</td><td>[r:value]
+             }]</td></tr>
+             </table>
+         </td>
+      </td>
+     </table>
+
+!!
+@@ @AddGear
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.1 - Player Sub-Panels;tooltip=;minWidth=
+[h:category=json.get(macro.args,"submit")]
+[h:id=json.get(macro.args,"id")]
+[h:switchToken(id)]
+[h:gearJSON=getProperty("GearJSON")]
+[h:gearJSON=if(string(gearJSON)=="","{}",gearJSON)]
+[h:rtnMacroName=json.get(macro.args,"rtnMacroName")]
+[Debug(rtnMacroName,"rtnMacroName in "+getMacroName())]
+[h:list=json.get(macro.args,"list")]
+[h:list=GetGearByCategory(category,list)]
+[h:newList=""]
+[foreach(l,list,""), code:{
+  [h:prop=GPP("Gear")+l]
+  [h:vis = prop+"~visible"]
+  [h:visible=GSP(vis)]
+  [h,if(isGM() || visible!=""): newList=listAppend(newList,l)]
+}]
+[h:list=newList]
+[h:okMacroName=getMacroName()+"OK@this"]
+[h:callingFrame=getMacroName()]
+[frame(getMacroName()), code:{
+ <html>
+<link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+<body>
+  <h1>[r:GL(category)] </h1>
+  <form name="Gear" method='json' action="[r:macroLinkText(okMacroName,"gm")]">
+  <table width="100%" border="1">
+    <tr>
+      <th>[r:GL("Gear")]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Cost")]</th>
+      <th>[r:GL("Weight")]</th>
+      <th>[r:GL("Number")]</th>
+  </tr>
+  [foreach(l,list,""), code:{
+    <tr>
+    <td>[r:l]
+[h:prop=GPP("Gear")+l]
+[h:d=prop+"~desc"]
+[h:w=prop+"~weight"]
+[h:nh=prop+"~numHands"]
+[h:cst = prop+"~cost"]
+[h:desc=GD(d)]
+[h:weight=GSP(w)]
+[h:numHands=GSP(nh)]
+[h:cost=GSP(cst)]
+[h:onHand=json.get(gearJSON,l)]
+[h:onHand=if(string(onHand)=="","{}",onHand)]
+[h:onHand=json.get(onHand,"Num")]
+    </td>
+    <td>[r:desc]</td>
+    <td>[r:cost]</td>
+    <td>[r:weight]</td>
+    <td><input type="text" size="3" name="[r:l]" value="[r:onHand]"/></td>
+    </tr>
+  }]
+  </table>
+  <input type="hidden" name="rtnMacroName" value="[r:rtnMacroName]">
+  <input type="hidden" name="list" value="[r:list]">
+  <input type="hidden" name="id" value="[r:id]">
+  <input type="hidden" name="callingFrame" value="[r:callingFrame]">
+  <input type="submit" name="submit" value="Get Gear">
+  </form>
+</body>
+</html>
+}]
+
+!!
+@@ @AddGearOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.1 - Player Sub-Panels;tooltip=;minWidth=
+[Debug(macro.args,getMacroName())]
+[h:rtnMacroName=json.get(macro.args,"rtnMacroName")]
+
+[Debug(rtnMacroName,"rtnMacroName in "+getMacroName())]
+[h:id=json.get(macro.args,"id")]
+[h:switchToken(id)]
+[h:gearJSON=getProperty("GearJSON")]
+[h:gearJSON=if(string(gearJSON)=="","{}",gearJSON)]
+[h:tokenGear=getProperty("Gear")]
+[h:tokenGear=json.fromList(tokenGear)]
+[h:callingFrame=json.get(macro.args,"callingFrame")]
+[h:closeFrame(callingFrame)]
+[h:list=json.get(macro.args,"list")]
+[Debug(list,"AddGearOK list")]
+[Debug(rtnMacroName,"AddGearOK rtnMacroName")]
+[r,foreach(l,list,""), code:{
+  [h:number=json.get(macro.args,l)]
+  [h:number=if(number==0,"",number)]
+  [h,if(number!=""), code:{
+    [h,if(json.contains(tokenGear,l)==0): tokenGear=json.append(tokenGear,l)]
+    [h:gJSON=json.get(gearJSON,l)]
+    [h:gJSON=if(string(gJSON)=="","{}",gJSON)]
+    [h:gJSON=json.set(gJSON,"Num",number)]
+    [h:gearJSON=json.set(gearJSON,l,gJSON)]
+  };{
+    [h:gearJSON=json.remove(gearJSON,l)]
+    [h:idx=json.indexOf(tokenGear,l)]
+    [h,if(idx>-1): tokenGear=json.remove(tokenGear,idx)]
+  }]
+}]
+[h:tokenGear=json.toList(tokenGear)]
+[h:setProperty("Gear",tokenGear)]
+[h:setProperty("GearJSON",gearJSON)]
+[h:passedArgs=json.set("","id",id)]
+[macro(rtnMacroName):passedArgs]
+
+!!
+@@ @Edit
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=1.1 - Player Sub-Panels;tooltip=;minWidth=
+[h:id=json.get(macro.args,"id")]
+<!-- might consider a way to change in the future -->
+[h:audience="all"]
+
+[h,if(0), code:{
+  [h:RecomputeTokenTraits(id,"Attributes")]
+  [h:RecomputeTokenTraits(id,"Skills")]
+};{}]
+<!-- table is 
+Attributes | Edges
+Skills | Hindrances
+Rolls | Gear
+        | Powers
+-->
+[h:settingAttrs=decode(getLibProperty("Attributes",GSTN()))]
+[h:settingSkills=decode(getLibProperty("Skills",GSTN()))]
+[h:settingRolls=decode(getLibProperty("Rolls",GSTN()))]
+[h:settingStats=decode(getLibProperty("DerivedStats",GSTN()))]
+[h:tokenAttrs=decode(getProperty("Attributes",id))]
+[h:tokenSkills=decode(getProperty("Skills",id))]
+[h:traitRollMacro="TraitTest@this"]
+[h:traitRollArgs=json.set("","id",id,"numRolls",4)]
+
+<!-- weed unskilled -->
+[h,foreach(prop,settingSkills,"</tr><tr>"), code:{
+  [h:value=getStrProp(tokenSkills,prop)]
+  [if(value=="d4e-2"), code:{ 
+    [h:tokenSkills=deleteStrProp(tokenSkills,prop)]
+    [h:settingSkills=listDelete(settingSkills,listFind(settingSkills, prop))]
+  };{}]
+}]
+
+<h3>Edit Screen</h3>
+     <table width="100%">
+       <tr><th>Traits and Rolls</th><th>Mods, Gear, Abilities</th></tr>
+       <tr>
+         <td valign="top"><!-- first column -->
+           <table width="100%">
+             <tr><td>Attributes</td><td>[r,foreach(prop,settingAttrs,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value=getStrProp(tokenAttrs,prop)]</a>
+               }]
+             </td></tr>
+             <tr><td>Skills</td><td>[r,foreach(prop,settingSkills,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value=getProperty(prop,id)]</a>
+               }]
+             </td></tr>
+             <tr><td>Rolls</td><td>[r,foreach(prop,settingRolls,", "), code:{
+               [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
+               [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value=getProperty(prop,id)]</a>
+               }]
+             </td></tr>
+           </table>
+         </td>
+         <td><!-- second column -->
+             <table width="100%"><tr><td align="center" colspan="2">Stats
+             [r,foreach(prop,settingStats,""), code:{
+               </td></tr><tr><td>[r:GL(prop)]</td><td>[r:value=getProperty(prop,id)]
+             }]</td></tr>
+             </table>
+         </td>
+      </td>
+     </table>
+
+!!
+@@ @Gear
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.1 - Player Sub-Panels;tooltip=;minWidth=
+[h:id=json.get(macro.args,"id")]
+<!-- might consider a way to change in the future -->
+[h:audience="all"]
+[h:switchToken(id)]
+[h:tokenGear=getProperty("Gear")]
+[h:gearJSON=getProperty("GearJSON")]
+[h:gearTypes=GSP("GearTypes")]
+[h:macroName="AddGear@this"]
+[h:rtnMacroName="PlayerPanel"+"@this"]
+
+<h3>[r:GL("Gear Screen")]</h3>
+<table width="100%">
+<tr>
+<th>[r:GL("Gear")]</th>
+<th>[r:GL("Category")]</th>
+<th>[r:GL("Description")]</th>
+<th>[r:GL("Num")]</th>
+<th>[r:GL("Weight")]</th>
+</tr>
+[r,foreach(g,tokenGear,""), code:{
+<tr>
+<td>
+[h:prop=GPP("Gear")+g]
+[h:d=prop+"~desc"]
+[h:w=prop+"~weight"]
+[h:nh=prop+"~numHands"]
+[h:cst = prop+"~cost"]
+[h:cat = prop+"~category"]
+[h:desc=GD(d)]
+[h:weight=GSP(w)]
+[h:numHands=GSP(nh)]
+[h:cost=GSP(cst)]
+[h:category=GSP(cat)]
+[h:onHand=json.get(gearJSON,g)]
+[h:onHand=if(string(onHand)=="","{}",onHand)]
+[h:onHand=json.get(onHand,"Num")]
+[h:onHand=if(onHand=="",0,onHand)]
+[r:g]
+</td>
+<td>
+[r:category]
+</td>
+<td>
+[r:desc]
+</td>
+<td>
+[r:onHand]
+</td>
+<td>
+[r:weight*onHand]
+</td>
+</tr>
+}]
+</table>
+<form name="Gear" method='json' action="[r:macroLinkText(macroName,"gm")]">
+<h3>add
+[r,foreach(gt,gearTypes,""), code:{
+  <input type="submit" name="submit" value='[r:GL(gt)]'/>
+}]</h3>
+<input type="hidden" name="list" value='[r:GSP("Gear")]'>
+<input type="hidden" name="id" value='[r:id]'>
+<input type="hidden" name="rtnMacroName" value="[r:rtnMacroName]">
+</form>
+
+!!
+@@ @GetGearByCategory
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:category=arg(0)]
+[h:list=arg(1)]
+[h:rtn=""]
+[r,foreach(l,list,""), code:{
+  [h:matchProp=GPP("Gear")+l+"~category"]
+  [h:type=GSP(matchProp)]
+  [h,if(lower(type)==lower(category)): rtn=listAppend(rtn,l)]
+}]
+[r:rtn]
+
+!!
+@@ @GetModList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:rollType=arg(1)]
+
+[h:switchToken(id)]
+
+[h:list=decode(getLibProperty("Attributes",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="a"]
+
+[h:list=decode(getLibProperty("Skills",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="s"]
+
+[h:list=decode(getLibProperty("Rolls",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="ro"]
+
+<!-- only intrested in conditional modifying values. 
+Thus look for .*~mod pattern whose propers has a S,N, or C
+S=when state is set
+N=when state is not set
+C=conditional text to display
+-->
+[h:pattern="~mod~"+finder+"~"+lower(rollType)]
+[h:modList=getMatchingLibProperties(".*"+pattern,GSTN())]
+
+[h:propSearchList="Races,Edges,MajorHindrances,MinorHindrances,MonstrousAbilities,Gear"]
+[h:matchList=""]
+[h,foreach(prop,propSearchList,""), code:{
+  [h:props=getProperty(prop,id)]
+  [h:pre=GPP(prop)]
+  [h,if(props!=""), code:{
+    [h,foreach(p,props,""): matchList=listAppend(matchList,pre+lower(p)+lower(pattern))]
+  };{}]
+}]  
+
+<!-- get state modifier list -->
+[h:stateMatchList=""]
+[h:states=GetStateList(id)]
+[h:states=json.fromList(states)]
+[h:prop="CombatStates"]
+[h:pre=GPP(prop)]
+[h,foreach(p,states,""): stateMatchList=listAppend(stateMatchList,pre+lower(p)+lower(pattern))]
+
+[h:matchList=json.fromList(matchList)]
+[h:modList=json.fromList(modList)]
+
+[h:finalList=json.intersection(modList,matchList)]
+
+[h:inEffect=""]
+
+<!-- store conditional modifiers here -->
+[h:conditional=""]
+
+<!-- e~acrobat~mod~a~agility=2,C,for nimbleness based agility rolls -->
+
+[h:finalList]
+[h,foreach(l,finalList,""),code:{
+
+  [h:splitit=SPLIT(l,"~")]
+  [h:type=GTFP(json.get(splitit,0))]
+  [h:typeName=upper(json.get(splitit,1),1)]
+  [h:modifier=decode(getLibProperty(l,GSTN()))]
+
+  [h:modifier=json.fromList(modifier)]
+
+  [h:len=json.length(modifier)]
+  [h:condModLabel="A"]
+  [h:conModValue=json.get(modifier,0)]
+  [h,if(len>1): condModLabel=json.get(modifier,1)]
+  [h,if(len>2): condModText=json.get(modifier,2)]
+  
+  [h,switch(condModLabel):
+   case "C": conditional=json.set(conditional,type+":"+typeName,conModValue+" "+condModText);
+   case "N":  
+      conditional = if(json.contains(states,condModText), conditional, json.set(conditional,type+" "+typeName,condModValue +" due to state not being"+ condModText) ;
+   case "S": conditional = if(json.contains(states,condModText), json.set(conditional,type+" "+typeName,condModValue +" due to state "+ condModText),conditional;
+   default: "no body"
+  ]
+}]
+
+<!-- now look through states, wounds, fatigue, etc to find out if there is anything that should be applied -->
+[h:rollModifiers=""]
+[h:w=0]
+[h:w=if(json.contains(states,"Wound1"),-1,w)]
+[h:w=if(json.contains(states,"Wound2"),-2,w)]
+[h:w=if(json.contains(states,"Wound3"),-3,w)]
+[if(w!=0), code:{
+  [h:w=w-getProperty("WoundMod",id)]
+  [h:w=if(w>0,0,w)]
+  [h:rollModifiers=json.set(rollModifiers,"Wounds",w)]
+};{}]
+[h:f=0]
+[h:f=if(json.contains(states,"Fatigue1"),-1,f)]
+[h:f=if(json.contains(states,"Fatigue2"),-2,f)]
+[if(f!=0), code:{
+  [h:f=if(f>0,0,f)]
+  [h:rollModifiers=json.set(rollModifiers,"Fatigue",f)]
+};{}]
+
+[h:stateMatchList=json.fromList(stateMatchList)]
+[h:stateMatchList=json.sort(stateMatchList,"A")]
+<!-- working off the premise that levels of states end in numbers 1-9 -->
+[h,foreach(l,stateMatchList,"<BR>"), code:{
+  [h:splitit=SPLIT(l,"~")]
+  [h:type=GTFP(json.get(splitit,0))]
+  [h:typeName=upper(json.get(splitit,1),1)]
+
+  [h:modifier=decode(getLibProperty(l,GSTN()))]
+  [h:modifier=json.fromList(modifier)]
+  [h:len=json.length(modifier)]
+  [h:conModValue=json.get(modifier,0)]
+  [h,if(conModvalue!=""): rollModifiers=json.set(rollModifiers,typeName,conModValue)]
+}]
+
+[r:rtn=json.append("",rollModifiers,conditional)]
+
+!!
+@@ @GetModListSave
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:rollType=arg(1)]
+
+[h:switchToken(id)]
+
+[h:list=decode(getLibProperty("Attributes",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="a"]
+
+[h:list=decode(getLibProperty("Skills",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="s"]
+
+[h:list=decode(getLibProperty("Rolls",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="ro"]
+
+<!-- only intrested in conditional modifying values. 
+Thus look for .*~mod pattern whose propers has a S,N, or C
+S=when state is set
+N=when state is not set
+C=conditional text to display
+-->
+[h:pattern="~mod~"+finder+"~"+lower(rollType)]
+[h:modList=getMatchingLibProperties(".*"+pattern,GSTN())]
+
+[h:propSearchList="Races,Edges,MajorHindrances,MinorHindrances,MonstrousAbilities,Gear"]
+[h:matchList=""]
+[h,foreach(prop,propSearchList,""), code:{
+  [h:props=getProperty(prop,id)]
+  [h:pre=GPP(prop)]
+  [h,if(props!=""), code:{
+    [h,foreach(p,props,""): matchList=listAppend(matchList,pre+lower(p)+lower(pattern))]
+  };{}]
+}]  
+[h:matchList=json.fromList(matchList)]
+[h:modList=json.fromList(modList)]
+
+[h:finalList=json.intersection(modList,matchList)]
+
+[h:inEffect=""]
+
+<!-- store conditional modifiers here -->
+[h:conditional=""]
+
+<!-- e~acrobat~mod~a~agility=2,C,for nimbleness based agility rolls -->
+
+[h:states=GetStateList()]
+[h:states=json.fromList(States)]
+[h:finalList]
+[h,foreach(l,finalList,""),code:{
+
+  [h:splitit=SPLIT(l,"~")]
+  [h:type=GTFP(json.get(splitit,0))]
+  [h:typeName=upper(json.get(splitit,1),1)]
+  [h:modifier=json.fromList(decode(getLibProperty(l,GSTN())))]
+  [h:len=json.length(modifier)]
+  [h:condModLabel="A"]
+  [h:conModValue=json.get(modifier,0)]
+  [h,if(len>1): condModLabel=json.get(modifier,1)]
+  [h,if(len>2): condModText=json.get(modifier,2)]
+  
+  [h,switch(condModLabel):
+   case "C": conditional=json.set(conditional,type+" "+typeName,conModValue+" "+condModText);
+   case "N":  
+      conditional = if(json.contains(states,condModText), conditional, json.set(conditional,type+" "+typeName,condModValue +" due to state not being"+ condModText) ;
+   case "S": conditional = if(json.contains(states,condModText), json.set(conditional,type+" "+typeName,condModValue +" due to state "+ condModText),conditional;
+   default: "no body"
+  ]
+}]
+
+<!-- now look through states, wounds, fatigue, etc to find out if there is anything that should be applied -->
+[h:rollModifiers=""]
+[h:w=0]
+[h:w=if(json.contains(states,"Wound1"),-1,w)]
+[h:w=if(json.contains(states,"Wound2"),-2,w)]
+[h:w=if(json.contains(states,"Wound3"),-3,w)]
+[if(w!=0), code:{
+  [h:w=w-getProperty("WoundMod",id)]
+  [h:w=if(w>0,0,w)]
+  [h:rollModifiers=json.set(rollModifiers,"Wounds",w)]
+};{}]
+[h:f=0]
+[h:f=if(json.contains(states,"Fatigue1"),-1,f)]
+[h:f=if(json.contains(states,"Fatigue2"),-2,f)]
+[if(f!=0), code:{
+  [h:f=if(f>0,0,f)]
+  [h:rollModifiers=json.set(rollModifiers,"Fatigue",f)]
+};{}]
+
+[r:rtn=json.append("",rollModifiers,conditional)]
+
+!!
+@@ @GetStateList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:states=""]
+[h:stateList=getTokenStates()]
+
+[foreach(state,stateList,""), code: {
+  [h:states=if(getState(state,id),listAppend(states,state),states)]
+}]
+[r:states]
+
+!!
+@@ @RecomputeTokenTraits
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:stats=json.append("","ds","os")]
+[h:traits=json.append("","a","s")]
+[h:rolls=json.append("","ro")]
+[h:id=arg(0)]
+
+[h:modifiers=GTM(id)]
+[h:modifiers=json.sort(modifiers,"a")]
+[foreach(m,modifiers,""), code:{
+  [h:a=GSP(m,GSTN())]
+  [SP2TM(id,m)]
+}]
+
+[h:mods=getProperty("mods",id)]
+[h:keys=json.fields(mods)]  
+[h,foreach(k,keys,""), code:{
+  [h:modValue=json.get(mods,k)]
+  [h:count=listCount(modValue)]
+
+  [h:always=if(count==1,"always","conditional")]
+
+  [h:stuff=SPLIT(k,"~")]
+  [h:mtype=json.get(stuff,0)]
+  [h:mthing=json.get(stuff,1)]
+  [h:arm=json.get(stuff,2)]
+  [h:ttype=json.get(stuff,3)]
+  [h:tthing=json.get(stuff,4)]
+
+  <!-- get the default value for things -->
+  [h:type="other"]
+  [h:type=if(json.contains(stats,ttype),"stat",type)]
+  [h:type=if(json.contains(traits,ttype),"trait",type)]
+  [h:type=if(json.contains(rolls,ttype),"rolls",type)]
+  [h:type=if(always=="conditional","other",type)]
+  [h:value=""]
+  [h:tokenProp=GTFP(ttype)]
+  [h:tprop=getProperty(tokenProp,id)]
+  tprop = [r:tprop] for tokenProp [r:tokenProp]<br>
+  [h,switch(type),code:
+     case "stat": { 
+       [h:def=ttype+"~"+tthing+"~default"]
+       [h:form=ttype+"~"+tthing+"~formula"]
+       [h:default=GSP(def)]
+       [h:formula=GSP(form)]
+       [h:evalStr="[h:value="+formula+"]"]
+       [if(formula!=""):evalMacro(evalStr)]
+       [h:value=if(value=="",default,value)]
+       [h:newvalue=if(arm=='mod',value+modValue,value)]
+       [h:newvalue=if(arm=='rep',modValue,newvalue)]
+       [h:tprop=setStrProp(tprop,tthing,value)]
+       [setProperty(tokenProp,tprop,id)]
+       [setProperty(tthing,newvalue,id)]
+     };
+     case "trait": {
+       [h:tokenValues=getProperty(tokenProp,id)]
+       [h:value=getStrProp(tokenValues,tthing)]
+       [h:newvalue=if(arm=='mod',DiceMath(value,modValue),value)]
+       [h:newvalue=if(arm=='rep',modValue,newvalue)]
+       [h:tprop=setStrProp(tprop,tthing,value)]
+       [setProperty(tokenProp,tprop,id)]
+       [setProperty(tthing,newvalue,id)]
+     };
+     case "rolls": {
+       [h:formula=GSP(ttype+"~"+tthing+"~formula",GSTN())]
+       [h:evalStr="[h:value="+formula+"]"]
+       [evalMacro(evalStr)]
+       [h:newvalue=if(arm=='mod',DiceMath(value,modValue),value)]
+       [h:newvalue=if(arm=='rep',modValue,newvalue)]
+       [h:tprop=setStrProp(tprop,tthing,value)]
+       [setProperty(tokenProp,tprop,id)]
+       [setProperty(tthing,newvalue,id)]
+     };
+     case "other": {
+       [r:type]
+     }
+  ]
+}]
+
+!!
+@@ @TraitTest
+@PROPS@ fontColor=red;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:numArgs=json.length(macro.args)]
+<!-- 
+0 = id
+1 = roll
+2 = rollType
+3 = userMod
+4 = targetId
+5 = numRolls
+-->
+[h,if(json.type(macro.args)=="ARRAY"), code:{
+[h:id=arg(0)]
+[h:roll=arg(1)]
+[h:rollType=arg(2)]
+[h:userMod=arg(3)]
+[h:targetId=arg(4)]
+[h:numRolls=arg(5)]
+};{
+[h:id=json.get(macro.args,"id")]
+[h:roll=json.get(macro.args,"roll")]
+[h:rollType=json.get(macro.args,"rollType")]
+[h:userMod=json.get(macro.args,"userMod")]
+[h:targetId=json.get(macro.args,"targetId")]
+[h:numRolls=json.get(macro.args,"numRolls")]
+}]
+[h:switchToken(id)]
+[h:numRolls=if(numRolls=="",0,numRolls)]
+[h:targetModList=""]
+[h:finalList=""]
+
+<!-- returns mod list and conditional mod list -->
+[h:modList=GetModList(id,rollType)]
+
+[h:condModList=json.get(modList,1)]
+[h:condModList=if(json.type(condModList)=="UNKNOWN","{}",condModList)]
+[h:modList=json.get(modList,0)]
+[h:modList=if(json.type(modList)=="UNKNOWN","{}",modList)]
+
+[h,if(targetId!=""): targetModList=GetTargetModList(targetId)]
+[h,if(targetModList!=""): modList=json.merge(modList,targetModList)]
+[h,if(userMod!=""),code:{
+  [h:userMod=json.set("","User Modifer",userMod)]
+  [h:modList=json.merge(modList,UserMod)]
+};{}]
+
+[h:keys=json.fields(modList)]
+[h,foreach(k,keys,""), code:{
+  [h:value=json.get(modList,k)]
+  [r,if(value!=0): k+" modifier "+value+"<br>"]   
+  [h:finalList=listAppend(finalList,value)]
+}]
+
+[h:rollStr=if(rollType=="",roll,rollType)]
+[h:roll=if(roll=="",getProperty(rollType,id),roll)]
+[h:finalRoll=DiceMath(roll,finalList)]
+
+[r,if(json.length(modList)!=0), code:{
+  [h:keys=json.fields(modList)]
+  Modifiers included in roll are
+  [r,foreach(k,keys,", "):  k +" "+ json.get(modList,k)]
+  <br>
+};{}]
+
+[r,if(json.length(condModList)!=0), code:{
+  Conditional Modifiers (not included in roll) are<br>
+  [h:keys=json.fields(condModList)]
+  [r,foreach(k,keys,", "):  json.get(condModList,k)+" for "+k]
+  <br>
+};{}]
+<b>[r:rollStr] Roll [r:finalRoll] = [r:eval(finalRoll)]</b>
+[h:numRolls=numRolls-1]
+[r,for(i, 0, numRolls), code:{
+  <br><b>Roll [r:i+2] = [r:eval(finalRoll)]</b>
+}]
+[h:wildRoll=getProperty("wilddie")]
+[h:wildRoll=if(rollType=="Run","",wildRoll)]
+[r,if(wildRoll!=""), code:{
+  [h:wildMod=0]
+  [h:minus=SPLIT(finalRoll,"-")]
+  [h:plus=SPLIT(finalRoll,'\+')]
+  [h:len=json.length(minus)]
+  [h,if(len==2),code:{
+     [h:wildMod=json.get(minus,1)]
+     [h:wildRoll=wildRoll+"-"+wildMod]
+  };{}]
+  [h:len=json.length(plus)]
+  [h,if(len==2),code:{
+     [h:wildMod=json.get(plus,1)]
+     [h:wildRoll=wildRoll+"+"+wildMod]
+  };{}]
+<br>
+<b>Wild Die [r:wildRoll] = [r:eval(wildRoll)]</b>
+};{}]
+
+!!
+@@ @TraitWithState
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:rollType=arg(1)]
+
+[h:switchToken(id)]
+
+[h:list=decode(getLibProperty("DerivedStats",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="ds"]
+
+[h:list=decode(getLibProperty("Attributes",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="a"]
+
+[h:list=decode(getLibProperty("Skills",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="s"]
+
+[h:list=decode(getLibProperty("Rolls",GSTN()))]
+[h,if(listFind(list,rollType)>-1): finder="ro"]
+
+<!-- only intrested in conditional modifying values. 
+Thus look for .*~mod pattern whose propers has a S,N, or C
+S=when state is set
+N=when state is not set
+C=conditional text to display
+-->
+[h:pattern="~mod~"+finder+"~"+lower(rollType)]
+[h:modList=getMatchingLibProperties(".*"+pattern,GSTN())]
+
+<!-- get state modifier list -->
+[h:stateMatchList=""]
+[h:states=GetStateList(id)]
+[h:states=json.fromList(states)]
+[h:prop="CombatStates"]
+[h:pre=GPP(prop)]
+[h,foreach(p,states,""): stateMatchList=listAppend(stateMatchList,pre+lower(p)+lower(pattern))]
+
+[h:rollModifiers=0]
+[h,foreach(l,stateMatchList,"<BR>"), code:{
+  [h:splitit=SPLIT(l,"~")]
+  [h:type=GTFP(json.get(splitit,0))]
+  [h:typeName=upper(json.get(splitit,1),1)]
+
+  [h:modifier=decode(getLibProperty(l,GSTN()))]
+  [h:modifier=json.fromList(modifier)]
+  [h:len=json.length(modifier)]
+  [h:conModValue=json.get(modifier,0)]
+  [h,if(conModvalue!=""), code:{
+    [h:rollModifiers=DiceMath(rollModifiers,conModvalue)]
+  };{}]
+}]
+
+[h:w=0]
+[h:w=if(json.contains(states,"Wound1"),-1,w)]
+[h:w=if(json.contains(states,"Wound2"),-2,w)]
+[h:w=if(json.contains(states,"Wound3"),-3,w)]
+[if(w!=0 && finder!="ds"), code:{
+  [h:w=w-getProperty("WoundMod",id)]
+  [h:w=if(w>0,0,w)]
+  [h:rollModifiers=DiceMath(rollModifiers,w)]
+};{}]
+[h:f=0]
+[h:f=if(json.contains(states,"Fatigue1"),-1,f)]
+[h:f=if(json.contains(states,"Fatigue2"),-2,f)]
+[if(f!=0 && finder!="ds"), code:{
+  [h:f=if(f>0,0,f)]
+  [h:rollModifiers=listAppend(rollModifiers,f,"+")]
+};{}]
+[h:rollModifiers]
+[h:roll=getProperty(rollType,id)]
+[r:DiceMath(roll,rollModifiers)]
+
+!!
+@@ @TokenWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=false;applyToSelected=true;group=3 - Setup Tokens;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:id=json.get(macro.args,"id")]
+[h:step=json.get(macro.args,"step")]
+[h:powersDone=json.get(macro.args,"powersDone")]
+
+<!-- get based on old step number -->
+
+    [h:race=getProperty("Races",id)]
+    [h,if(race==""): race="Human"]
+    [h:xp=getProperty("XP",id)]
+    [h,if(xp==""): xp=0]
+    [h:edges=getProperty("Edges",id)]
+    [h:majorHindrances=getProperty("MajorHindrances",id)]
+    [h:minorHindrances=getProperty("MinorHindrances",id)]
+    [h:arcaneBackgrounds=getProperty("ArcaneBackgrounds",id)]
+    [h:languages=getProperty("Languages",id)]
+    [h:attributes=getProperty("Attributes",id)]
+    [h:skills=getProperty("Skills",id)]
+    [h:monstrousAbilities=getProperty("MonstrousAbilities",id)]
+
+<!-- save based on old step number -->
+[r,switch(step), code:
+  case 1: { 
+    [h:race=json.get(macro.args,"race")]
+    [h:xp=json.get(macro.args,"xp")]
+    [h:setProperty("Races",race,id)]
+    [h:setProperty("XP",xp,id)]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [r,if(startsWith(k,"cb_") && race=='Creature'): monstrousAbilities=listAppend(monstrousAbilities,json.get(macro.args,k))]
+    }]   
+    [h:setProperty("MonstrousAbilities",monstrousAbilities,id)]
+  };
+  case 2: { 
+    [h:edges=json.get(macro.args,"edges")]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [h,if(startsWith(k,"cb_")): edges=listAppend(edges,json.get(macro.args,k))]
+    }]   
+    [h:setProperty("Edges",edges,id)]
+  };
+  case 3: { 
+    [h:majorHindrances=json.get(macro.args,"majorHindrances")]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [h,if(startsWith(k,"cb_")): majorHindrances=listAppend(majorHindrances,json.get(macro.args,k))]
+    }]   
+    [h:setProperty("MajorHindrances",majorHindrances,id)]
+  };
+  case 4: { 
+    [h:minorHindrances=json.get(macro.args,"minorHindrances")]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [h,if(startsWith(k,"cb_")): minorHindrances=listAppend(minorHindrances,json.get(macro.args,k))]
+    }]   
+    [h:setProperty("MinorHindrances",minorHindrances,id)]
+  };
+  case 5: { 
+    [h:arcaneBackgrounds=json.get(macro.args,"arcaneBackgrounds")]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [h,if(startsWith(k,"cb_")): arcaneBackgrounds=listAppend(arcaneBackgrounds,json.get(macro.args,k))]
+    }]   
+    [h:setProperty("ArcaneBackgrounds",arcaneBackgrounds,id)]
+    [h:SetTokenArcaneStuff(id,arcaneBackgrounds)]
+    [h:passedArgs=json.set("","abs",arcaneBackgrounds,"id",id,"step",0,"rtnMacro",getMacroName(),"rtnStep",step)]
+    [macro("SelectTokenPowers@this"):passedArgs]
+    [h:abort(0)]
+  };
+  case 6: { 
+    [h,if(powersDone!=1): languages=json.get(macro.args,"languages")]
+    [h:keys=json.fields(macro.args)]
+    [h,foreach(k,keys), code:{
+      [h,if(startsWith(k,"cb_")): languages=listAppend(languages,json.get(macro.args,k))]
+    }]
+    languages powers done = [r:powersDone] macro.args = [r:macro.args]   
+    [h,if(powersDone!=1): setProperty("Languages",languages,id)]
+  };
+  case 7: { 
+    [h:propList=decode(getLibProperty("Attributes",GSTN()))]
+    [h:attributes=""]
+    [h,foreach(p,propList), code:{
+      [h:attr=json.get(macro.args,p)]
+      [h:setProperty(p,attr,id)]
+      [h:attributes=json.set(attributes,p,attr)]
+    }]
+    [r:attributes]
+    [h:setProperty("Attributes",json.toStrProp(attributes),id)]
+  };
+  case 8: { 
+    [h:propList=decode(getLibProperty("Skills",GSTN()))]
+    [h:skills=""]
+    [h,foreach(p,propList), code:{
+      [h:attr=json.get(macro.args,p)]
+      [h:setProperty(p,attr,id)]
+      [h:skills=json.set(skills,p,attr)]
+    }]
+    [h:setProperty("Skills",json.toStrProp(skills),id)]
+  };
+  default : { blither }
+]
+
+[h:submit=json.get(macro.args,"submit")]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+[h:step=if(powersDone==1,step-1,step)]
+[h:type=getPropertyType(id)]
+[h:continue=if(type=="Basic",1,0)]
+[h:assert(continue,"Token type must be of type Basic")]
+[h:name=getName(id)]
+
+[h:macroName=getMacroName()+"@this"]
+
+[dialog(getMacroName(),"width=300; height=200"): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Token Setup Wizard")] [r:GL("Step")] [r:step]</h1>
+  [r,if(step==1), code:{
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+      <table width='100%'>
+        <tr>
+          <td>[r:GL("Name")]</td><td>[r:name]</td>
+        </tr>
+        <tr><td>[h:list=decode(getLibProperty("Races",GSTN()))][h:list=listAppend("Creature",list)][r:GL("Race")]</td><td><select name="race">[r:str=DropdownFromList(race,list)]</select></td></tr>
+        <tr><td>[r:GL("Experience Points")]</td><td><input type="text" size="3" value="[r:xp]" name="xp" /></td></tr>
+        [r,if(race=='Creature'): "<tr><td>"+GL("Monstrous Abilities")+"</td><td>"+CheckBoxList(monstrousAbilities,"MonstrousAbilities") +"</td></tr>"]
+     </table>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="save" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==2), code:{
+    <h2>[r:GL("Select Edges")] </h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:CheckBoxList(edges,"Edges")]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==3), code:{
+    <h2>[r:GL("Select Major Hindrances")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:CheckBoxList(majorHindrances,"MajorHindrances")]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==4), code:{
+    <h2>[r:GL("Select Minor Hindrances")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:CheckBoxList(minorHindrances,"MinorHindrances")]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==5), code:{
+    <h2>[r:GL("Set Arcane Backgrounds")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:CheckBoxList(arcaneBackgrounds,"ArcaneBackgrounds")]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==6), code:{
+    <h2>[r:GL("Set Languages")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:languages]<p>
+     [r:CheckBoxList(languages,"Languages")]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==7), code:{
+    <h2>[r:GL("Set Attributes")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:TraitRadios("Attributes",id)]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==8), code:{
+    <h2>[r:GL("Set Skills")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     [r:TraitRadios("Skills",id)]<p>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==9), code:{
+    <h2>[r:GL("Character Sheet")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     <table>
+     [r:TWSL(id,"DerivedStats")]
+     [r:TWSL(id,"OtherStats")]
+     </table>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+     <input type="submit" name="submit" value="next" />
+    </form>
+  };{}]
+  [r,if(step==10), code:{
+    <h2>[r:GL("Character Sheet")]</h2>
+    <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+     <table>
+       <tr><td>Race</td><td>[r:getProperty("Races",id)]</td></tr>
+       <tr><td>Attributes</td><td>[r:TWTL(id,"Attributes")]</td></tr>
+       <tr><td>Skills</td><td>[r:TWTL(id,"Skills")]</td></tr>
+       <tr><td>Rolls</td><td>[r:TWRL(id)]</td></tr>
+     </table>
+     <input type="hidden" name="id" value="[r:id]"/>
+     <input type="hidden" name="step" value="[r:step]"/>
+     <input type="submit" name="submit" value="prev" />
+    </form>
+  };{}]
+  </body>
+  </html>
+}]
+
+!!
+@@ @DieDropdownAce
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<option value="0">d4e-2</option>
+<option value="1">d4e</option>
+<option value="2">d6e</option>
+<option value="3">d8e</option>
+<option value="4">d10e</option>
+<option value="5">d12e</option>
+<option value="6">d12e+1</option>
+<option value="7">d12e+2</option>
+<option value="8">d12e+3</option>
+<option value="9">d12e+4</option>
+<option value="10">d12e+5</option>
+<option value="11">d12e+6</option>
+<option value="12">d12e+7</option>
+<option value="13">d12e+8</option>
+<option value="14">d12e+9</option>
+<option value="15">d12e+10</option>
+<option value="16">d12e+11</option>
+<option value="16">d12e+12</option>
+
+!!
+@@ @DieDropdownNonAce
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<option value="1">d4</option>
+<option value="2">d6</option>
+<option value="3">d8</option>
+<option value="4">d10</option>
+<option value="5">d12</option>
+
+!!
+@@ @GetDieFromNum
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[r,switch(arg(0)), code:
+  case 0:   { d4e-2    };
+  case 1:   { d4e       };
+  case 2:   { d6e       };
+  case 3:   { d8e       };
+  case 4:   { d10e     };
+  case 5:   { d12e     };
+  case 6:   { d12e+1 };
+  case 7:   { d12e+2 };
+  case 8:   { d12e+3 };
+  case 9:   { d12e+4 };
+  case 10: { d12e+5 };
+  case 11: { d12e+6 };
+  case 12: { d12e+7 };
+  case 13: { d12e+8 };
+  case 14: { d12e+9 };
+  case 15: { d12e+10};
+  case 16: { d12e+11};
+  case 17: { d12e+12};
+  default : { d4e-2     }]
+
+!!
+@@ @GetPropMods
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:rtn="{}"]
+[h:prop=lower(arg(0))]
+[h:id=arg(1)]
+
+[h:race=lower(getProperty("Race",id))]
+[h:matchStr="r~"+race+"~mod~"+prop]
+[h:mods=getMatchingLibProperties(matchStr,GSTN())]
+[h,foreach(m,mods), code:{
+  [h:mod=getLibProperty(m,GSTN())]
+  [h:rtn=json.set(rtn,race,listAppend(json.get(rtn,race),mod))]
+}]
+
+[h:edges=getProperty("Edges",id)]
+[r,foreach(e,edges), code:{
+  [r:matchStr="e~"+e+"~mod~"+prop]
+  [h:mods=getMatchingLibProperties(matchStr,GSTN())]
+  [h,foreach(m,mods), code:{
+    [h:mod=getLibProperty(m,GSTN())]
+    [h:rtn=json.set(rtn,e,listAppend(json.get(rtn,e),mod))]
+  }]
+}]
+
+[r:rtn]
+
+!!
+@@ @GetPropertyPrefix
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=red;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[r,switch(arg(0)), code:
+  case "Races":   { r~ };
+  case "Attributes":   { a~ };
+  case "Skills":   { s~       };
+  case "DerivedStats":   { ds~       };
+  case "KnowledgeSkills":   { ks~     };
+  case "ArcaneSkills":   { as~    };
+  case "Movements":   {mv~ };
+  case "OtherStats":   { os~ };
+  case "Edges":   { e~ };
+  case "MajorHindrances":   { mj~};
+  case "MinorHindrances": { mn~};
+  case "MonstrousAbilities": { ma~};
+  case "Decks": { dk~ };
+  case "ArcaneBackgrounds": { ab~  };
+  case "Powers": { p~ };
+  case "Vehicles": { v~};
+  case "CombatStates": { cs~};
+  case "AttackActions": {aa~ };
+  case "Trappings": {tr~ };
+  case "Rolls": {ro~ };
+  case "Gear": {ge~ };
+  case "GearTypes": {gt~ };
+  case "WeaponActions": {wa~ };
+  default : { }]
+
+!!
+@@ @GetTokenTraitMod
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<!-- foreach Edge, Hindrance, etc. create a set of shadow lists for game use -->
+[h:id=arg(0)]
+[h:trait=arg(1)]
+[h:type=arg(2)]
+[h:propLists="Edges,MajorHindrances,MinorHindrances,MonstrousAbilities,Races"]
+[h:str=""]
+[h:affectingProps=""]
+[h:intersects=""]
+[h,foreach(pl,propLists,""), code:{
+  [h:setting=json.fromList(decode(getLibProperty(pl,GSTN())))]
+  [h:token=json.fromList(getProperty(pl,id))]
+  [h:inter=json.intersection(setting,token)]
+  [h:intersects=json.set(intersects,pl,inter)]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~add~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~mod~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~rep~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+}]
+[h:intersects]
+[h:affectingProps]
+[h:prefix=GPP(type)]
+[h:matcher=".*~"+prefix+lower(trait)]
+[h:rtn=""]
+[h:rtn2=""]
+[h,foreach(a,affectingProps,""), code:{
+ [h,if(matches(a,matcher)==1), code:{
+    [h:value=decode(getLibProperty(a,GSTN()))]
+    [h:rtn=json.set(rtn,a,value)]
+  }]
+}]
+[r:rtn]
+
+!!
+@@ @GetTypeFromPrefix
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=red;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:value=arg(0)]
+[r,switch(value):
+  case "r":  "Races";
+  case "a":  "Attributes";
+  case "s":  "Skills";
+  case "ds": "DerivedStats";
+  case "ks": "KnowledgeSkills";
+  case "as": "ArcaneSkills";
+  case "mv": "Movements";
+  case "os": "OtherStats";
+  case "e":"Edges";
+  case "mj":"MajorHindrances";
+  case "mn":"MinorHindrances";
+  case "ma":"MonstrousAbilities";
+  case "dk":"Decks";
+  case "g":"Gear";
+  case "ab":"ArcaneBackgrounds";
+  case "p":"Powers";
+  case "v":"Vehicles";
+  case "cs":"CombatStates";
+  case "aa":"AttackActions";
+  case "tr":"Trappings";
+  case "ro":"Rolls";
+  case "ge":"Gear";
+  case "gt":"GearTypes";
+  case "wa":"WeaponActions";
+  default : "No Type Found"
+]
+
+!!
+@@ @SelectTokenPowers
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:abs=json.get(macro.args,"abs")]
+[h:id=json.get(macro.args,"id")]
+[h:step=json.get(macro.args,"step")]
+[h:rtnMacro=json.get(macro.args,"rtnMacro")]
+[h:rtnStep=json.get(macro.args,"rtnStep")]
+cnt [r:cnt=listCount(abs)]
+step [r:step=if(step=="",0,step)]
+
+[h:closeDialog(rtnMacro)]
+
+[if(step>0), code:{ 
+  [h:ab=listGet(abs,step-1)]
+  [h:powersProp=ab+"Powers"]
+  [h:keys=json.fields(macro.args)]
+  [h:powers=""]
+  [h,foreach(k,keys), code:{
+    [h,if(startsWith(k,"cb_")): powers=listAppend(powers,json.get(macro.args,k))]
+  }]   
+  [r:setProperty(powersProp,powers,id)]
+};{}]
+
+[if(step>=cnt || cnt==0), code:{
+  [rtnMacro=rtnMacro+"@this"]
+  [rtnArgs=json.set("","step",rtnStep+1,"id",id,"powersDone","1")]
+  [macro(rtnMacro):rtnArgs]
+  [closeDialog(getMacroName())]
+  [abort(0)]
+};{}]
+
+[h:ab=listGet(abs,step)]
+[h:powersProp=ab+"Powers"]
+[r:powers=getProperty(powersProp,id)]
+[h:settingPowersProp=GPP("ArcaneBackgrounds") + ab + "~powerList"]
+[r:settingPowers=GSP(settingPowersProp)]
+
+[r:submit=json.get(macro.args,"submit")]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+
+[h:type=getPropertyType(id)]
+[h:continue=if(type=="Basic",1,0)]
+[h:assert(continue,"Token type must be of type Basic")]
+[h:name=getName(id)]
+
+[h:macroName=getMacroName()+"@this"]
+
+[dialog(getMacroName(),"width=300; height=200"): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Token Setup Wizard")]</h1>
+  <h2>[r:GL("Select "+upper(ab,1)+" Powers")]</h2>
+  <form name="TokenSetupWizard" method='json' action='[r:macroLinkText(macroName,"gm")]'>
+   [r:CheckBoxList(powers,settingPowersProp)]<p>
+   <input type="hidden" name="id" value="[r:id]"/>
+   <input type="hidden" name="step" value="[r:step]"/>
+   <input type="hidden" name="rtnMacro" value="[r:rtnMacro]"/>
+   <input type="hidden" name="rtnStep" value="[r:rtnStep]"/>
+   <input type="hidden" name="abs" value="[r:abs]"/>
+   <input type="submit" name="submit" value="prev" />
+   <input type="submit" name="submit" value="next" />
+  </form>
+  </body>
+  </html>
+}]
+
+!!
+@@ @SetTokenArcaneStuff
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[r:id=arg(0)]
+[r:abs=arg(1)]
+[h:arcaneSkills=""]
+[h,foreach(ab,abs,"<BR>"), code:{
+  [h:ab=lower(ab)]
+  [h:pre=GPP("ArcaneBackgrounds")+ab]
+  [h:prop=pre+"~skillnametype"]
+  [h:skillNameType=GSP(prop)]
+  [h:powerPointMethod=GSP(pre+"~powerpointmethod")]
+
+  [h,switch(skillNameType), code:
+    case "Custom Skill Name": { 
+      [h:prop=pre+"~skillname"]
+      [h:skillName=GSP(prop)]
+      [h:arcaneSkills=listAppend(arcaneSkills,skillName)]
+    };
+   default : { ab skill name blither }
+  ]
+
+  [h,switch(powerPointMethod), code:
+    case "Power Point Pool": { 
+      [h:prop=pre+"~startingpowerpoints"]
+      [h:startingPowerPoints=GSP(prop)]
+      [h:tProp=upper(ab,1)+"PowerPoints"]
+      [h:currValue=GTP(tProp,id)]
+      [h,if(currValue==""): STP(tProp,startingPowerPoints,id)]
+    };
+    case "Power Points per Power": { 
+      [h:prop=pre+"~startingpowerpoints"]
+      [h:startingPowerPoints=GSP(prop)]
+      [h:tProp=upper(ab,1)+"PowerPoints"]
+      [h:currValue=GTP(tProp,id)]
+      [h,if(currValue==""): STP(tProp,startingPowerPoints,id)]
+    };
+   default : { abpower points blither [r:powerPointMethod] }
+  ]
+}]
+[h:setProperty("ArcaneBackgrounds",abs,id)]
+[h:setProperty("ArcaneSkills",arcaneSkills,id)]
+
+!!
+@@ @TokenRecompute
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<!-- foreach Edge, Hindrance, etc. create a set of shadow lists for game use -->
+[h:id=arg(0)]
+[h:propLists="Edges,MajorHindrances,MinorHindrances,MonstrousAbilities,Races"]
+[h:str=""]
+[h:affectingProps=""]
+[h:intersects=""]
+[h,foreach(pl,propLists,""), code:{
+  [h:setting=json.fromList(decode(getLibProperty(pl,GSTN())))]
+  [h:token=json.fromList(getProperty(pl,id))]
+  [h:inter=json.intersection(setting,token)]
+  [h:intersects=json.set(intersects,pl,inter)]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~add~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~mod~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+  [h,foreach(i,inter), code:{
+    [h:pattern='(r|e|mn|mj|ma)~'+lower(i)+'~rep~.*']
+    [h:str=getMatchingLibProperties(pattern,GSTN())]
+    [if(str!=""): affectingProps=listAppend(affectingProps,str)]
+  }]
+}]
+[r:intersects]
+<br>
+[r:affectingProps]
+<br>
+[r,foreach(a,affectingProps,"<br>"): a+":"+decode(getLibProperty(a,GSTN()))]
+
+!!
+@@ @TokenWizardRollLine
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:type="Rolls"]
+[h:props=decode(getLibProperty(type,GSTN()))]
+[h:prefix=GPP(type)]
+[h:switchToken(id)]
+[h:firstTime=1]
+[h:spForType=""]
+[r,foreach(p,props,""), code:{
+  [h:value=decode(getLibProperty(prefix+p+"~formula",GSTN()))]
+  [h:value = eval(value)]
+  [h:spForType=setStrProp(spForType,p,value)]
+  [h:modList=""]
+  [h:mods=GTTM(id,p,type)]
+  [h:keys=""]
+  [h,if(json.type(mods)=="OBJECT"): keys=json.fields(mods)]
+  [h,foreach(k,keys,""), code:{
+    [h:mod=json.get(mods,k)]
+    [h:cnt=listCount(mod)]
+    [h,if(cnt==1): modList=listAppend(modList,mod)]
+  }]
+  [h:finalValue=DiceMath(value,modList)]
+  [h:setProperty(p,finalValue,id)]
+  [h:semi=if(firstTime==1,"",";")]
+  [h:firstTime=0]
+  [r:semi+p+"="+finalValue+" "]
+}]
+[h:setProperty(type,spForType,id)]
+
+!!
+@@ @TokenWizardStatLine
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:type=arg(1)]
+[h:props=listSort(decode(getLibProperty(type,GSTN())),"A")]
+[h:tokenValues=decode(getProperty(type,id))]
+[h:spForType=""]
+[r,foreach(p,props,""), code:{
+  [h:modList=""]
+  [h:value=getStrProp(tokenValues,p)]
+  [r,if(value==""), code:{
+    [h:def=GPP(type)+p+"~default"]
+    [h:form=GPP(type)+p+"~formula"]
+    [h:default=GSP(def)]
+    [h:formula=GSP(form)]
+    [h:evalStr="[h:value="+formula+"]"]
+    [h,if(formula!=""):evalMacro(evalStr)]
+    [h:value=if(value=="",default,value)]
+    [h:spForType=setStrProp(spForType,p,value)]
+  };{}]
+  [h:mods=GTTM(id,p,type)]
+  [h:keys=""]
+  [h,if(json.type(mods)=="OBJECT"): keys=json.fields(mods)]
+  [h,foreach(k,keys,""), code:{
+    [h:mod=json.get(mods,k)]
+    [h:cnt=listCount(mod)]
+    [h,if(cnt==1): modList=listAppend(modList,mod)]
+  }]
+  [h:finalValue=DiceMath(value,modList)]
+  [h:setProperty(p,finalValue,id)]
+  [r,if(finalValue!="d4e-2"): "<tr><td>"+p+"</td><td>"+finalValue+"</td></tr>"]
+}]
+[h:setProperty(type,spForType,id)]
+
+!!
+@@ @TokenWizardTraitLine
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:id=arg(0)]
+[h:type=arg(1)]
+[h:props=decode(getLibProperty(type,GSTN()))]
+[h:tokenValues=decode(getProperty(type,id))]
+[h:firstTime=1]
+[r,foreach(p,props,""), code:{
+  [h:modList=""]
+  [h:value=getStrProp(tokenValues,p)]
+  [h:mods=GTTM(id,p,type)]
+  [h:keys=""]
+  [h,if(json.type(mods)=="OBJECT"): keys=json.fields(mods)]
+  [h,foreach(k,keys,""), code:{
+    [h:mod=json.get(mods,k)]
+    [h:cnt=listCount(mod)]
+    [h,if(cnt==1): modList=listAppend(modList,mod)]
+  }]
+  [h:finalValue=DiceMath(value,modList)]
+  [h:setProperty(p,finalValue,id)]
+  [h:semi=if(firstTime==1,"",";")]
+  [h:firstTime=0]
+  [r,if(finalValue!="d4e-2"): semi+p+"="+finalValue+" "]
+}]
+
+!!
+@@ @TraitRadios
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+[h:prop=arg(0)]
+[h:settingTraitList=decode(getLibProperty(prop,GSTN()))]
+[h:id=arg(1)]
+[h:traitStrList=getProperty(prop,id)]
+
+[h,switch(prop), code:
+  case "Attributes": { 
+    [h:min=1][h:max=8][default="d4e"]
+  };
+  default : { 
+    [h:min=0][h:max=6][default="d4e-2"]
+  }
+]
+
+[h:propJson=json.fromStrProp(traitStrList)]
+[h:keys=json.fields(propJson)]
+<table><th>[r:GL("Trait")][h:tmax=max-min][h:tmin=0]</th>
+[for(i,tmin,tmax), code:{
+  <th>[r:i]</th>
+}]
+</tr>
+[foreach(t,settingTraitList,"</tr>"), code:{
+    <tr><td>[r:t][h:currvalue=json.get(propjson,t)][h:currvalue=if(currvalue=="",default,currvalue)]</td>
+    [for(i,min,max), code:{
+      <td>[h:die=GDFN(i)] [h:checked=if(die==currvalue,"checked","")]<input type="radio" name="[r:t]" value="[r:die]" [r:checked] /> [r:die]</td>
+    }]
+}]
+</table>
+
+!!
+@@ @Manage Setting
+@PROPS@ fontColor=green;autoExecute=true;fontSize=1.00em;sortBy=0;color=default;playerEditable=false;applyToSelected=false;group=5 - Setting;tooltip=;minWidth=
+[h:settingTok=GSTN()]
+[h:macroName=getMacroName()+"@this"]
+[h:selected=macro.args]
+[h:closeFrame("EditConfigItems")]
+[h:selected=if(selected=="","ManageLists",selected)]
+[h:selected=if(selected=="submit=Done","Configuration",selected)]
+
+[h:class = "oddRow"]
+[h:class2=FlipClass(class)]
+[h:td1="<th>"]
+[h:td2="<td>"]
+
+[h:settingLists= json.append("","Races", "Languages", "Attributes", "Skills", "DerivedStats", "KnowledgeSkills", "Movements", "OtherStats", "Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "Decks", "Gear", "ArcaneBackgrounds", "Powers", "Vehicles", "Actions")]
+
+[h:settingLists= json.append("","Races", "Languages", "Attributes", "Skills", "DerivedStats", "KnowledgeSkills", "Movements", "OtherStats", "Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "Decks", "Gear", "ArcaneBackgrounds", "ArcaneSkills", "Powers", "Trappings", "Rolls", "CombatStates", "GearTypes", "WeaponsAllLabels", "WeaponsMeleeLabels", "WeaponsRangedLabels", "WeaponsThrownLabels", "WeaponActions", "WeaponAmmoTypes", "GearWeaponLabels", "GearGadgetLables", "GearAmmoTypes", "AttackActions")]
+[h:settingLists=json.sort(settingLists)]
+
+[h:mainLabelNames = json.append("","ManageLists","LangsAndLabels","Configuration")]
+
+[h:configList=json.append("","Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "ArcaneBackgrounds", "Races", "DerivedStats", "OtherStats", "Rolls", "Powers", "Gear", "Skills", "CombatStates", "WeaponActions")]
+[h:configList=json.sort(configList)]
+
+[h:lowerWindowMacro="Edit"+selected+"Form@this"]
+
+[dialog("Manage Setting","width=600; height=400"), code:{
+<html>
+<link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+<body>
+
+<div id="header">
+
+<table width="100%" border="1"><tr >
+[foreach(l,mainLabelNames,""), code:{
+   [h: linkit=macroLinkText(macroName, "gm",l)]
+   [r:td=if(l==selected,td1,td2)]  
+   <a href="[r:linkit]">[r:GL(l)]</a></td>
+}]
+
+</tr>
+</table>
+
+[r,if(selected=="ManageLists"), code:{
+ [r,macro("SettingLists@this"):settingLists]
+};{}]
+
+[r,if(selected=="LangsAndLabels"), code:{
+  [r,macro("EditFrameLangForm@this"):""]
+  [r,macro("EditLabelsForm@this"):""]
+};{}]
+
+[r,if(selected=="Configuration"): SC(configList)]
+
+</body>
+</html>
+}]
+
+!!
+@@ @SetDefaultConfig
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5 - Setting;tooltip=;minWidth=
+[h:setLibProperty("Races",encode("Android, Atlantean, Avion, Dwarf, Elf, Half-Elf-Elven, Half-Elf-Human, Half-Folk, Half-Orc, Human, Rakashan, Saurian"),GSTN())]
+[h:setLibProperty("Languages",encode("Common"),GSTN())]
+[h:setLibProperty("Attributes",encode("Agility, Smarts, Spirit, Strength, Vigor"),GSTN())]
+[h:setLibProperty("Skills",encode("Boating, Climbing, Driving, Fighting, Gambling, Healing, Intimidation, Investigation, Knowledge, Lockpicking, Notice, Persuasion, Piloting, Repair, Riding, Shooting, Stealth, Streetwise, Survival, Swimming, Taunt, Throwing, Tracking"),GSTN())]
+[h:setLibProperty("DerivedStats",encode("Charisma, Pace, Run, Parry, Toughness, WildDie, Bennies, Armor"),GSTN())]
+[h:setLibProperty("KnowledgeSkills",encode("Area Knowledge, Battle, Computers, Electronics, History, Journalism, Law, Medicine, Science"),GSTN())]
+[h:setLibProperty("Movements",encode("Fly, Burrow, Swim"),GSTN())]
+[h:setLibProperty("OtherStats",encode("MultAttackPenalty, OffHandPenalty, SoakMod, ShakenMod, WoundMod, MinInitCard, NumInitCards, Size, FearCheckMod, LoadLimit, DodgeBonus, IncapacitationBonus, AutofirePenalty, DamageBonus, BennieRollBonus, RangedAttackBonus, MeleeAttackBonus, UnarmedDamageBonus, UnarmedDefenderPenalty, MeleeRaiseDamage, RangedRaiseDamage, UnarmedRaiseDamage, FatigueCheckMod"),GSTN())]
+[h:setLibProperty("Edges",encode("Ace, Acrobat, Adept, Alertness, Ambidextrous, ArcaneResistance, ImpArcaneRes, Assassin, Attractive, VeryAttractive, BeastBond, BeastMaster, Berserk, Block, ImprovedBlock, Brave, Brawler, Bruiser, Brawny, Champion, Charismatic, CombatReflexes, Command, CommandPresence, CommonBond, Connections, Counterattack, ImprovedCounterattack, DangerSense, DeadShot, Dodge, ImprovedDodge, Elan, Extraction, ImprovedExtraction, FastHealer, Fervor, FirstStrike, ImpFirstStrike, Fleet-Footed, Florentine, Followers, Frenzy, ImpFrenzy, Gadgeteer, GiantKiller, HardToKill, HarderToKill, Healer, HoldTheLine, HolyUnholyWarrior, ImprovisationalFighter, Inspire, Investigator, Jack-of-All-Trades, KillerInstinct, LeaderOfMen, LevelHeaded, ImpLevelHeaded, Linguist, LiquidCourage, Luck, GreatLuck, Marksman, MartialArtist, ImprovedMartialArtist, MartialArtsMaster, McGyver, Mentalist, MightyBlow, MrFixIt, NaturalLeader, NervesOfSteel, ImpNervesOfSteel, NewPower, Noble, NoMercy, PowerPoints, PowerSurge, Professional, Expert, Master, Quick, QuickDraw, RapidRecharge, ImpRapidRecharge, Rich, FilthyRich, RockandRoll, Scavenger, Scholar, Sidekick, SoulDrain, SteadyHands, Sweep, ImpSweep, StrongWilled, Tactician, Thief, ToughAsNails, ImpToughAsNails, TrademarkWeapon, ImpTrademarkWeapon, TwoFisted, WeaponMaster, MasterOfArms, Wizard, Woodsman"),GSTN())]
+[h:setLibProperty("MajorHindrances",encode("Arrogant, BadEyes, BadLuck, Blind, Bloodthirsty, Clueless, CodeOfHonor, Curious, Delusional, Elderly, Enemy, Greedy, Habit, HardOfHearing, Heroic, Lame, OneArm, OneEye, OneLeg, Overconfident, Pacifist, Phobia, Small, Vengeful, Vow, Wanted, Yellow, Young"),GSTN())]
+[h:setLibProperty("MinorHindrances",encode("AllThumbs, Anemic, BadEyes, BigMouth, Cautious, DeathWish, Delusional, DoubtingThomas, Enemy, Greedy, Habit, HardofHearing, Illiterate, Loyal, Mean, Obese, Outsider, Pacifist, Phobia, Poverty, Quirk, Stubborn, Ugly, Vengeful, Vow, Wanted"),GSTN())]
+[h:setLibProperty("MonstrousAbilities",encode("Aquatic, Armor2, Armor4, Armor8, Burrowing, Construct, Elemental, Ethereal, Fear, Fear-2, Fear-4, Fearless, Flight, Gargantuan, Hardy, Infection, Infravision, Immunity, Invulnerability, LowLightVision, Paralysis, Poison, Poison-2, Poison-4, RegenerationFast, RegenerationSlow, Stun, Undead, WallWalker, Weakness, Small, Large, Huge"),GSTN())]
+[h:setLibProperty("Decks",encode("Init, Adventure, Action, Other"),GSTN())]
+[h:setLibProperty("ArcaneBackgrounds",encode("Magic, Miracles, Psionics, SuperPowers, WeirdScience"),GSTN())]
+[h:setLibProperty("Powers",encode("Armor, Banish, Barrier, BeastFriend, Blast, Blind, Bolt, BoostLowerTrait, Burrow, Burst, Confusion, DamageField, Darksight, Deflection, DetectConcealArcana, Disguise, Dispel, Divination, DrainPowerPoints, ElementalManipulation, Entangle, EnvironmentalProtection, Farsight, Fear, Fly, GreaterHealing, GrowthShrink, Havoc, Healing, Intangibility, Invisibility, LightObscure, MindReading, Pummel, Puppet, Quickness, ShapeChange, Slow, Slumber, Smite, SpeakLanguage, Speed, Stun, Succor, SummonAlly, Telekinesis, Teleport, WallWalker, WarriorsGift, Zombie"),GSTN())]
+[h:setLibProperty("CombatStates",encode("Encumbered,Prone,WildAttack,Beserk,LightCover,MediumCover,HeavyCover,Dim,Dark,PitchDark,Defend,FullDefense,Tricked,Unarmed,UnstablePlatform,Drunk"),GSTN())]
+[h:setLibProperty("AttackActions",encode("Aim,Autofire,CalledShot2,CalledShot4,Disarm,DoubleTap,3RndBurst,TheDrop,GangUp1,GangUp2,GangUp3,GangUp4,OffHandAttack,RapidAttack,TouchAttack,TrickAgility,TrickSmarts,TwoWeapons,"),GSTN())]
+[h:setLibProperty("Trappings",encode("Acid, Cold/Ice, Darkness, Electricity, Fire/Heat, Light, Necromantic, Sound, Arcane"),GSTN())]
+[h:setLibProperty("RacialAbilities",encode("Agile,Smart,Spirited,Strong,Tough,VeryAgile,VerySmart,VerySpirited,VeryStrong,VeryTough,FreeSeasonedEdge"),GSTN())]
+[h:setLibProperty("Rolls", encode("Soak, Unshake, FearCheck, Incapacitation, FatigueCheck, Run"),GSTN())]
+
+!!
+@@ @EditListForm
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.1 - Setting Lists;tooltip=;minWidth=
+[h:prop=arg(0)]
+[h:props=decode(getLibProperty(prop,GSTN()))]
+[h,if(props==""), code:{
+  [h:props=if(prop=="Races","Human",props)]
+  [h:props=if(prop=="Languages","Common",props)]
+  [h:props=if(prop=="Attributes","Agility,Smarts,Spirit,Strength,Vigor",props)]
+  [h:props=if(prop=="Skills", "Boating, Climbing, Driving, Fighting, Gambling, Healing, Intimidation, Investigation, Knowledge, Lockpicking, Notice, Persuasion, Piloting, Repair, Riding, Shooting, Stealth, Streetwise, Survival, Swimming, Taunt, Throwing, Tracking",props)]
+  [h:props=if(prop=="DerivedStats","Charisma,Pace,Parry,Toughness,WildDie",props)]
+  [h:props=if(prop=="KnowledgeSkills","Area Knowledge,Battle, Computers, Electronics, History, Journalism, Law, Medicine, Science",props)]
+  [h:props=if(prop=="Movements","Running, Flying, Swimming, Burrowing, Other",props)]
+  [h:props=if(prop=="OtherStats","Size, MultAttackPenalty, OffHandPenalty, SoakMod, ShakenMod, WoundMod, MinInitCard, NumInitCards, FearCheckMod, Bennies",props)]
+  [h:props=if(prop=="Edges","Ace, Acrobat, Adept, Alertness, Ambidextrous, ArcaneBackground, ArcaneResistance, ImpArcaneRes, Assassin, Attractive, VeryAttractive, BeastBond, BeastMaster, Berserk, Block, ImprovedBlock, Brave, Brawler, Bruiser, Brawny, Champion, Charismatic, CombatReflexes, Command, CommandPresence, CommonBond, Connections, Counterattack, ImprovedCounterattack, DangerSense, DeadShot, Dodge, ImprovedDodge, Elan, Extraction, ImprovedExtraction, FastHealer, Fervor, FirstStrike, ImpFirstStrike, Fleet-Footed, Florentine, Followers, Frenzy, ImpFrenzy, Gadgeteer, GiantKiller, HardToKill, HarderToKill, Healer, HoldTheLine, HolyUnholyWarrior, ImprovisationalFighter, Inspire, Investigator, Jack-of-All-Trades, KillerInstinct, LeaderOfMen, LevelHeaded, ImpLevelHeaded, Linguist, LiquidCourage, Luck, GreatLuck, Marksman, MartialArtist, ImprovedMartialArtist, MartialArtsMaster, McGyver, Mentalist, MightyBlow, MrFixIt, NaturalLeader, NervesOfSteel, ImpNervesOfSteel, NewPower, Noble, NoMercy, PowerPoints, PowerSurge, Professional, Expert, Master, Quick, QuickDraw, RapidRecharge, ImpRapidRecharge, Rich, FilthyRich, RockandRoll, Scavenger, Scholar, Sidekick, SoulDrain, SteadyHands, Sweep, ImpSweep, StrongWilled, Tactician, Thief, ToughAsNails, ImpToughAsNails, TrademarkWeapon, ImpTrademarkWeapon, TwoFisted, WeaponMaster, MasterOfArms, Wizard, Woodsman",props)]
+  [h:props=if(prop=="MajorHindrances","Arrogant, BadEyes, BadLuck, Blind, Bloodthirsty, Clueless, CodeOfHonor, Curious, Delusional, Elderly, Enemy, Greedy, Habit, HardOfHearing, Heroic, Lame, OneArm, OneEye, OneLeg, Overconfident, Pacifist, Phobia, Small, Vengeful, Vow, Wanted, Yellow, Young",props)]
+  [h:props=if(prop=="MinorHindrances","AllThumbs, Anemic, BadEyes, BigMouth, Cautious, DeathWish, Delusional, DoubtingThomas, Enemy, Greedy, Habit, HardofHearing, Illiterate, Loyal, Mean, Obese, Outsider, Pacifist, Phobia, Poverty, Quirk, Stubborn, Ugly, Vengeful, Vow, Wanted",props)]
+  [h:props=if(prop=="MonstrousAbilities","Aquatic,Armor,Burrowing,Construct,Elemental,Ethereal,Fear,Fearless,Flight,Gargantuan,Hardy,Infection,Infravision,Immunity,Invulnerability,LowLightVision,Paralysis,Poison,RegenerationFast,RegenerationSlow,Stun,Undead,WallWalker,Weakness",props)]
+  [h:props=if(prop=="Decks","Init, Adventure, Action, Other",props)]
+  [h:props=if(prop=="GearList","",props)]
+  [h:props=if(prop=="ArcaneBackgrounds","",props)]
+  [h:props=if(prop=="Powers","Armor, Banish, Barrier, BeastFriend, Blast, Blind, Bolt, BoostLowerTrait, Burrow, Burst, Confusion, DamageField, Darksight, Deflection, DetectConcealArcana, Disguise, Dispel, Divination, DrainPowerPoints, ElementalManipulation, Entangle, EnvironmentalProtection, Farsight, Fear, Fly, GreaterHealing, GrowthShrink, Havoc, Healing, Intangibility, Invisibility, LightObscure, MindReading, Pummel, Puppet, Quickness, ShapeChange, Slow, Slumber, Smite, SpeakLanguage, Speed, Stun, Succor, SummonAlly, Telekinesis, Teleport, WallWalker, WarriorsGift, Zombie",props)]
+  [h:props=if(prop=="Vehicles","",props)]
+  [h:props=if(prop=="Actions","",props)]
+
+};{props=""}]
+[h:lines=ceil(length(props)/61)]
+[h:lines=if(lines<2,2,lines)]
+[h:instr=GL(prop)]
+[h:formName=prop+"Edit"]
+[h:buttonName="Save"]
+[h:macroName="EditListFormOK@this"]
+
+[dialog(getMacroName()), code:{
+<html>
+<link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+<body>
+
+<h3>[r:instr]</h3>
+
+<form name="[r:formName]"  method='json' action="[r:macroLinkText(macroName,"gm","")]">
+[r:GL("Label Name")] for [r:prop]: <input type="text" name="labelName" size="40" value="[r:instr]"/> 
+<br>
+<textarea rows="[r:lines]" cols="40" name="list">
+[r,foreach(p,props,", "): trim(p)]
+</textarea><br>
+<input type="hidden" value="[r:prop]" name="prop">
+<input type="submit" value=[r:GL(buttonName)]>
+</form>
+</body>
+</html>
+}]
+
+!!
+@@ @EditListFormOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.1 - Setting Lists;tooltip=;minWidth=
+[h:prop=json.get(macro.args,"prop")]<br>
+[h:list=trim(json.get(macro.args,"list"))]<br>
+[h:list=encode(list)]
+[h:labelName=json.get(macro.args,"labelName")]
+[h,if(labelName!=""): SL(prop,labelName)]
+[h:setLibProperty(prop,list,GSTN())]
+[h:closeDialog("EditListForm")]
+[macro("Manage Setting@this"):"ManageLists"]
+
+!!
+@@ @SettingLists
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.1 - Setting Lists;tooltip=;minWidth=
+[h:settingLists=macro.args]
+[h:class="oddRow"]
+<table width="100%">
+[r,foreach(sl,settingLists,"</td>"), code:{
+   <tr class=[r:class=FC(class)]><td>[h: linkit=macroLinkText("EditListForm@this", "gm",sl)]<a href="[r:linkit]">[r:GL(sl)]</a></td>
+   <td>[r:GSP(sl)]</td>
+}]
+</table>
+
+!!
+@@ @ConfigGearWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[r:submit=json.get(macro.args,"submit")]
+
+[h:macroName = getMacroName()+"@this"]
+
+[h:modtxt=GL("Modify Effect")]
+[h:addtxt=GL("Adder Effect")]
+[h:reptxt=GL("Replacer Effect")]
+[h:d=prop+"~desc"]
+[h:w=prop+"~weight"]
+[h:nh=prop+"~numHands"]
+[h:vis = prop+"~visible"]
+[h:cst = prop+"~cost"]
+[h:cat = prop+"~category"]
+[h:desc=GD(d)]
+[h:weight=GSP(w)]
+[h:numHands=GSP(nh)]
+[h:visible=GSP(vis)]
+[h:category=GSP(cat)]
+[h:cost=GSP(cst)]
+
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h:submit=if(submit==GL("Remove Effect"),"remove",submit)]
+[h:submit=if(submit==GL("Add Effect"),"add",submit)]
+[h:submit=if(submit==GL("Edit Effect"),"edit",submit)]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h:submit=if(submit==GL("Done"),"done",submit)]
+submit [r:submit]<br>
+[r,switch(submit), code:
+  case "done": { 
+    [h:step=0]
+  };  
+  case "add": { 
+    [h:step=1]
+  };  
+  case "next": { 
+    [h:step=step]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+    [h:labelName=json.get(macro.args,"labelName")]
+    [h,if(labelName!="" && matches(labelName,name)==0): SL(name,labelName)]
+    [r:SPU(d,json.get(macro.args,"desc"))]
+    [r:SPU(w,json.get(macro.args,"weight"))]
+    [r:SPU(nh,json.get(macro.args,"numHands"))]
+    [r:SPU(vis,json.get(macro.args,"visible"))]
+    [r:SPU(cst,json.get(macro.args,"cost"))]
+    [r:SPU(cat,json.get(macro.args,"category"))]
+
+    [h:closeDialog(getMacroName())]
+    [h,macro("EditConfigItems@this"):"Gear"]
+    [h:abort(0)]
+  };
+  case "remove": { 
+    [h:step=0]
+    [r:remove=json.get(macro.args,"reset")]
+    [h:removeProp=json.get(remove,"prop")]
+    [if(removeProp!=""): SPU(removeProp,"")]
+  };
+  case "edit": { 
+    [h:step=step+1]
+    [h:num=json.get(macro.args,"remove_effect")]
+    [h:e=json.get(effects,num)]
+    [h:effect_desc=json.get(e,"desc")]
+    [h:castPP=json.get(e,"castPP")]
+    [h:maintainPP=json.get(e,"maintainPP")]
+    [h:effect=json.get(e,"effect")]
+  };
+  default : { 
+    [h:step=step]
+  }
+]
+
+[r,switch(step), code:
+  case 2: {
+     submit [r:submit] 
+  };
+  case 3: { 
+    [h:macro.args=json.set(macro.args,"step",0)]
+    attr [r:attr=json.get(macro.args,"attr")]
+    split [r:t=SPLIT(attr,"~")]
+    [r,if(json.get(t,0)=="gt"), code:{
+    [closeDialog(getMacroName())]
+      [macro("ConfigureGearAspect@Lib:Rules"):macro.args]
+      <b>back in [r:getMacroName()]
+    };{
+      [macro.args=json.set(macro.args,"macroName",macroName)]
+      [macro.args=json.set(macro.args,"step",0)]
+      [macro("EditConfigItemWizardOK@Lib:Rules"):macro.args]
+    }]
+    [h:macro.args=json.remove(macro.args,"step","submit")]
+    [abort(0)]
+  };
+  default : {
+    [h:t=prop+"~tag~.*"]
+    [h:m=prop+"~mod~.*"]
+    [h:a=prop+"~add~.*"]
+    [h:r=prop+"~rep~.*"]
+    [h:desc=GD(d)]
+
+    [macro("GetConfigEffectsJSON@Lib:Rules"):str=json.append("",m,a,r)]
+    [h:jeffs=macro.return]
+
+    [h:modstr= ""]
+    [h:addstr= ""]
+    [h:repstr= ""]
+    [h:tagstr= ""]
+
+    [h:jmods=json.get(jeffs,"mods")]
+    [h,foreach(j,jmods,""): modstr=modstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") + if(startsWith(json.get(j,"value"),"-") || startsWith(json.get(j,"value"),"+") ," "," +") + json.get(j,"value")+"<BR>"]   
+    [h:jmods=json.get(jeffs,"adds")]
+    [h,foreach(j,jmods,""): addstr=addstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name")+"<BR>"]   
+    [h:jmods=json.get(jeffs,"reps")]
+    [h,foreach(j,jmods,""): repstr=repstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") +" "+ json.get(j,"value")+"<BR>"]   
+
+    [h:tags=getMatchingLibProperties(t,GSTN(),"json")]
+    [h:line=""]
+    [h,foreach(t,tags,""), code:{
+      [h:weaponTrait=GSP(t)]
+      [h:tag=getStrProp(weaponTrait,"tag")]
+      [h:skill=getStrProp(weaponTrait,"skill")]
+      [h:skill=listGet(skill,0)]
+      [h:damage=getStrProp(weaponTrait,"damage")]
+      [h:damage=listGet(damage,0)]
+      [h:range=getStrProp(weaponTrait,"range")]
+      [h:reach=getStrProp(weaponTrait,"reach")]
+      [h:line=line+"<input type='radio' name='weaponcb' value='"+tag+"'/>"]
+      [h:line=line + tag + " " + skill + " " + damage + " " + range + "<BR>"] 
+      [h:tagStr=if(string(weaponTrait)=="",tagStr,tagStr+line)]
+    }]
+  }
+]
+
+[h:name=GL(name)]
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:GL(name)] Step [r:step]</h1>
+  [r,if(step==0), code:{
+    <div>
+      <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+        <table width="100%">
+    <tr><td>[r:GL("Label Name")]</td>
+           <td><input type="text" name="labelName" size="40" value="[r:name]"/></td></tr>          <tr><td>[r:GL("Description")]:</td><td><input type="text" name="desc" size="40" value="[r:GD(d)]"/></td></tr>
+          <tr><td>[r:GL("Weight")]</td><td><input type="text" name="weight" size="2" value="[r:weight]"/></td></tr>
+          <tr><td>[r:GL("Num Hands")]</td><td>
+            <select name="numHands">
+                         [r:a=DropdownFromList(numHands,"0,1,2")]
+            </select>
+          </td></tr>
+          <tr><td>[r:GL("Category")]</td><td>
+            <select name="category">
+                         [r:a=DropdownFromList(category,GSP("GearTypes"))]
+            </select>
+          </td></tr>
+          <tr><td>[r:GL("Cost")]</td><td><input type="text" name="cost" size="2" value="[r:cost]"/></td></tr>
+          <tr><td colspan="2"><input type='checkbox' [r:visible]  name='visible'  value='checked'>[r:GL("Visible")]</input></td></tr>
+        </table><br>
+      [r,if(modstr!="" || addstr!="" || repstr!=""): "<center><h2>"+GL("Gear Modifiers")+"</h2></center>"]
+      [r,if(modstr!=""): "<h3>"+GL("Modify Effects")+"</h3>"+modstr]
+      [r,if(addstr!=""): "<h3>"+GL("Addition Effects")+"</h3>"+addstr]
+      [r,if(repstr!=""): "<h3>"+GL("Replacement Effects")+"</h3>"+repstr]
+      <input type="hidden" name="macroName" value=[r:macroName]>
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="1">
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+       [r,if(modstr!="" || addstr!="" || repstr!=""): 
+      "<input type='submit' name='submit' value='"+GL("Remove Effect")+"'/>"]
+      <input type="submit" name="submit" value='[r:GL("Add Effect")]'/>
+    </form>
+    </div>
+<hr>
+    <form name="EditGearTraits" method='json' action= "[r:macroLinkText("ConfigureGearAspect@Lib:Rules","gm")]">
+      [r:tagstr]
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="attr" value="tag~Weapon">
+      <input type="hidden" name="macroName" value=[r:macroName]>
+      <input type="hidden" name="step" value="1">
+      <input type="submit" name="submit" value='[r:GL("Add")]'/>
+      <input type="submit" name="submit" value='[r:GL("Edit")]'/>
+      <input type="submit" name="submit" value='[r:GL("Remove")]'/>
+    </form>
+  };{}]
+  [r,if(step==1), code:{
+    <h3>[r:GL("Pick Effect Type")]</h3>
+    <form name="Effects" method='json' action= "[r:macroLinkText(macroName, "gm")]">
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="name" value="[r:name]">
+    <input type="hidden" name="type" value="[r:type]">
+    <input type="hidden" name="step" value="2">
+    <input type="radio" name="effType" value="mod" /> [r:modtxt]<br />
+    <input type="radio" name="effType" value="add" /> [r:addtxt]<br />
+    <input type="radio" name="effType" value="rep" /> [r:reptxt]<br />
+    <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  [r,if(step==2), code:{
+    <form name="Effects" method='json' action= "[r:macroLinkText(macroName, "gm")]">
+    [h:effType=json.get(macro.args,"effType")]
+    <table><tr>
+      <td>[r:GL("Select Attribute to Adjust")] : </td><td>
+      <select name="attr">
+        [r,if(effType=="mod"): str=AttrModDropdown()]
+        [r,if(effType=="add"): str=GearAddDropdown()]
+        [r,if(effType=="rep"): str=AttrRepDropdown()]
+      </select></td></tr><tr>
+      <td>[r:GL("Mod Amnt")]</td><td>
+        [r,if(effType=="mod"): "<select name='amnt'>"+ ModiferDropdown() + "</select>"]
+        [r,if(effType=="rep"):  "<select name='amnt'>"+ ReplacerDropdown() + "</select>"]
+     </td></tr><tr>
+     <td>[r:GL("When")]</td><td>
+      <select name="Conditional">
+        [r:str=ConditionalDropDown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Select State")]</td><td>
+      <select name="ConditionState">
+        [r:str=GetCombatStatesDropdown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Or Enter Condition Text")]</td><td>
+     <input type="text" name="ConditionText"/></td><tr><td colspan="2">
+     <input type="hidden" name="prop" value="[r:prop]">
+     <input type="hidden" name="macroName" value="[r:macroName]">
+     <input type="hidden" name="name" value="[r:name]">
+     <input type="hidden" name="type" value="[r:type]">
+     <input type="hidden" name="step" value="3">
+     <input type="hidden" name="effType" value="[r:effType]">
+     <input type="submit" name="submit" value='[r:GL("Next")]'/> 
+     </td></tr></table>
+   </form>
+  };{}]
+
+  </body>
+  </html>
+}]
+
+!!
+@@ @ConfigGearWizardOld
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[r:macro.args]
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[r:submit=json.get(macro.args,"submit")]
+
+[h:macroName = getMacroName()+"@this"]
+
+[h:modtxt=GL("Modify Effect")]
+[h:addtxt=GL("Adder Effect")]
+[h:reptxt=GL("Replacer Effect")]
+[h:d=prop+"~desc"]
+[h:w=prop+"~weight"]
+[h:nh=prop+"~numHands"]
+[h:vis = prop+"~visible"]
+[h:desc=GD(d)]
+[h:weight=GSP(w)]
+[h:numHands=GSP(nh)]
+[h:visible=GSP(vis)]
+<br>Step before switch = [r:step]
+[r,switch(step), code:
+  case 2: {
+     submit [r:submit] 
+  };
+  case 3: { 
+    [h:macro.args=json.set(macro.args,"step",0)]
+    attr [r:attr=json.get(macro.args,"attr")]
+    split [r:t=SPLIT(attr,"~")]
+    [r,if(json.get(t,0)=="gt"), code:{
+      [macro("ConfigureGearAspect@Lib:Rules"):macro.args]
+      <b>back in [r:getMacroName()]
+    };{
+      [macro("EditConfigItemWizardOK@Lib:Rules"):macro.args]
+    }]
+    [h:macro.args=json.remove(macro.args,"step","submit")]
+    [closeDialog(getMacroName())]
+    [abort(0)]
+  };
+  default : {
+    [h:t=prop+"~tag~.*"]
+    [h:m=prop+"~mod~.*"]
+    [h:a=prop+"~add~.*"]
+    [h:r=prop+"~rep~.*"]
+    [h:desc=GD(d)]
+
+    [macro("GetConfigEffectsJSON@Lib:Rules"):str=json.append("",m,a,r)]
+    [h:jeffs=macro.return]
+
+    [h:modstr= ""]
+    [h:addstr= ""]
+    [h:repstr= ""]
+    [h:tagstr= ""]
+
+    [h:jmods=json.get(jeffs,"mods")]
+    [h,foreach(j,jmods,""): modstr=modstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") + if(startsWith(json.get(j,"value"),"-") || startsWith(json.get(j,"value"),"+") ," "," +") + json.get(j,"value")+"<BR>"]   
+    [h:jmods=json.get(jeffs,"adds")]
+    [h,foreach(j,jmods,""): addstr=addstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name")+"<BR>"]   
+    [h:jmods=json.get(jeffs,"reps")]
+    [h,foreach(j,jmods,""): repstr=repstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") +" "+ json.get(j,"value")+"<BR>"]   
+
+    [h:tags=getMatchingLibProperties(t,GSTN(),"json")]
+    [h:line=""]
+    [h,foreach(t,tags,""), code:{
+      [h:weaponTrait=GSP(t)]
+      [h:tag=getStrProp(weaponTrait,"tag")]
+      [h:skill=getStrProp(weaponTrait,"skill")]
+      [h:damage=getStrProp(weaponTrait,"damage")]
+      [h:range=getStrProp(weaponTrait,"short")]
+      [h:medium=getStrProp(weaponTrait,"medium")]
+      [h:range=if(medium!="",range+"/"+medium,range)]
+      [h:long=getStrProp(weaponTrait,"long")]
+      [h:range=if(long!="",range+"/"+long,range)]
+      [h:line=line+"<input type='radio' name='weaponcb' value='"+tag+"'/>"]
+      [h:line=line + tag + " " + skill + " " + damage + " " + range + "<BR>"] 
+      [h:tagStr=if(string(weaponTrait)=="",tagStr,tagStr+line)]
+    }]
+  }
+]
+
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h:submit=if(submit==GL("Remove Effect"),"remove",submit)]
+[h:submit=if(submit==GL("Add New Effect"),"add",submit)]
+[h:submit=if(submit==GL("Edit Effect"),"edit",submit)]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h:submit=if(submit==GL("Done"),"done",submit)]
+submit [r:submit]<br>
+[r,switch(submit), code:
+  case "done": { 
+    [h:step=0]
+  };  
+  case "add": { 
+    [h:step=1]
+  };  
+  case "next": { 
+    [h:step=step]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+    [h:labelName=json.get(macro.args,"labelName")]
+    [h,if(labelName!="" && matches(labelName,name)==0): SL(name,labelName)]
+    [r:SPU(d,json.get(macro.args,"desc"))]
+    [r:SPU(w,json.get(macro.args,"weight"))]
+    [r:SPU(nh,json.get(macro.args,"numHands"))]
+    [r:SPU(vis,json.get(macro.args,"visible"))]
+
+    [h:closeDialog(getMacroName())]
+    [h,macro("EditConfigItems@this"):"Gear"]
+    [h:abort(0)]
+  };
+  case "remove": { 
+    [h:step=0]
+    [r:remove=json.get(macro.args,"reset")]
+    [h:removeProp=json.get(remove,"prop")]
+    [if(removeProp!=""): SPU(removeProp,"")]
+  };
+  case "edit": { 
+    [h:step=step+1]
+    [h:num=json.get(macro.args,"remove_effect")]
+    [h:e=json.get(effects,num)]
+    [h:effect_desc=json.get(e,"desc")]
+    [h:castPP=json.get(e,"castPP")]
+    [h:maintainPP=json.get(e,"maintainPP")]
+    [h:effect=json.get(e,"effect")]
+  };
+  default : { 
+    [h:step=step]
+  }
+]
+[h:name=GL(name)]
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:GL(name)] Step [r:step]</h1>
+  [r,if(step==0), code:{
+    <div>
+      <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+        <table width="100%">
+    <tr><td>[r:GL("Label Name")]</td>
+           <td><input type="text" name="labelName" size="40" value="[r:name]"/></td></tr>          <tr><td>[r:GL("Description")]:</td><td><input type="text" name="desc" size="40" value="[r:GD(d)]"/></td></tr>
+          <tr><td>[r:GL("Weight")]</td><td><input type="text" name="weight" size="2" value="[r:weight]"/></td></tr>
+          <tr><td>[r:GL("Num Hands")]</td><td><input type="text" name="numHands" size="2" value="[r:numHands]"/></td></tr>
+          <tr><td colspan="2"><input type='checkbox' [r:visible]  name='visible'  value='checked'>[r:GL("Visible")]</input></td></tr>
+        </table><br>
+        <input type="hidden" name="name" value="[r:name]">
+        <input type="hidden" name="type" value="[r:type]">
+        <input type="hidden" name="prop" value="[r:prop]"/>
+        <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      </form>
+    </div>
+<hr>
+    <form name="Rest" method='json' action= "[r:macroLinkText(macroName, "gm")]">
+      [r,if(modstr!=""): "<h2>"+GL("Modify Effects")+"</h2>"+modstr]
+      [r,if(addstr!=""): "<h2>"+GL("Addition Effects")+"</h2>"+addstr]
+      [r,if(repstr!=""): "<h2>"+GL("Replacement Effects")+"</h2>"+repstr]
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="macroName" value=[r:macroName]>
+      <input type="submit" name="submit" value='[r:GL("Remove Gear Modifier")]'/>
+    </form>    
+    <form name="EditEffects" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="1">
+      <input type="submit" name="submit" value='[r:GL("Add New Gear Modifier")]'/>
+    </form>
+<hr>
+    <form name="EditGearTraits" method='json' action= "[r:macroLinkText("ConfigureGearAspect@Lib:Rules","gm")]">
+      [r:tagstr]
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="attr" value="tag~Weapon">
+      <input type="hidden" name="macroName" value=[r:macroName]>
+      <input type="hidden" name="step" value="1">
+      <input type="submit" name="submit" value='[r:GL("Add")]'/>
+      <input type="submit" name="submit" value='[r:GL("Edit")]'/>
+      <input type="submit" name="submit" value='[r:GL("Remove")]'/>
+    </form>
+  };{}]
+  [r,if(step==1), code:{
+    <h3>[r:GL("Pick Effect Type")]</h3>
+    <form name="Effects" method='json' action= "[r:macroLinkText(macroName, "gm")]">
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="name" value="[r:name]">
+    <input type="hidden" name="type" value="[r:type]">
+    <input type="hidden" name="step" value="2">
+    <input type="radio" name="effType" value="mod" /> [r:modtxt]<br />
+    <input type="radio" name="effType" value="add" /> [r:addtxt]<br />
+    <input type="radio" name="effType" value="rep" /> [r:reptxt]<br />
+    <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  [r,if(step==2), code:{
+    <form name="Effects" method='json' action= "[r:macroLinkText(macroName, "gm")]">
+    [h:effType=json.get(macro.args,"effType")]
+    <table><tr>
+      <td>[r:GL("Select Attribute to Adjust")] : </td><td>
+      <select name="attr">
+        [r,if(effType=="mod"): str=AttrModDropdown()]
+        [r,if(effType=="add"): str=GearAddDropdown()]
+        [r,if(effType=="rep"): str=AttrRepDropdown()]
+      </select></td></tr><tr>
+      <td>[r:GL("Mod Amnt")]</td><td>
+        [r,if(effType=="mod"): "<select name='amnt'>"+ ModiferDropdown() + "</select>"]
+        [r,if(effType=="rep"):  "<select name='amnt'>"+ ReplacerDropdown() + "</select>"]
+     </td></tr><tr>
+     <td>[r:GL("When")]</td><td>
+      <select name="Conditional">
+        [r:str=ConditionalDropDown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Select State")]</td><td>
+      <select name="ConditionState">
+        [r:str=GetCombatStatesDropdown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Or Enter Condition Text")]</td><td>
+     <input type="text" name="ConditionText"/></td><tr><td colspan="2">
+     <input type="hidden" name="prop" value="[r:prop]">
+     <input type="hidden" name="macroName" value="[r:macroName]">
+     <input type="hidden" name="name" value="[r:name]">
+     <input type="hidden" name="type" value="[r:type]">
+     <input type="hidden" name="step" value="3">
+     <input type="hidden" name="effType" value="[r:effType]">
+     <input type="submit" name="submit" value='[r:GL("Next")]'/> 
+     </td></tr></table>
+   </form>
+  };{}]
+
+  </body>
+  </html>
+}]
+
+!!
+@@ @ConfigWeaponActionsWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[r:macro.args]<br>
+[h:name=json.get(macro.args,"name")]
+[h:prop=json.get(macro.args,"prop")]
+[h:type=json.get(macro.args,"type")]
+
+[h:d=GD(prop+"~desc")]
+[h:rolls=prop+"~rolls"]
+[h:rolls=GSP(rolls)]
+[h:rolls=if(rolls=="",1,rolls)]
+[h:traitMod=prop+"~traitMod"]
+[h:traitMod=GSP(traitMod)]
+[h:traitMod=if(traitMod=="",0,traitMod)]
+[h:damageMod=prop+"~damageMod"]
+[r:damageMod=GSP(damageMod)]
+[h:damageMod=if(damageMod=="",0,damageMod)]
+[h:ammo=prop+"~ammo"]
+[h:ammo=GSP(ammo)]
+[h:ammo=if(ammo=="",1,ammo)]
+
+[h:setState=prop+"~setState"]
+[h:setState=GSP(setState)]
+
+[h:reqEdge=prop+"~reqEdge"]
+[h:reqEdge=GSP(reqEdge)]
+
+[h:combatStates=GSP("CombatStates")]
+[h:combatStates=SortList(combatStates,"A")]
+[h:combatStates=listAppend("None",combatStates)]
+[h:otherStats=GSP("OtherStats")]
+[h:otherStats=SortList(otherStats,"A")]
+[h:edges=GSP("edges")]
+[h:edges=SortList(edges,"A")]
+[h:edges=listAppend("None",edges)]
+[h:traitModDropdown=listAppend("-6,-5,-4,-3,-2,-1,0,1,2,3,4",otherStats))]
+
+[h:name=GL(name)]
+[dialog(getMacroName()): {
+<html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:name] </h1>
+  <form name="EditWeaponAction" method='json' action="[r:macroLinkText("ConfigWeaponActionsWizardOK@this","gm")]">
+  <table width="100%">
+    <tr><td>[r:GL("Label Name")]</td>
+           <td><input type="text" name="labelName" size="40" value="[r:name]"/></td></tr>
+    <tr><td>[r:GL("Description")]</td>
+           <td><input type="text" name="desc" size="40" value="[r:d]"/></td></tr>
+    <tr><td>[r:GL("Num Rolls")]</td><td>
+      <select name="rolls">[r:DropdownFromList(rolls,"1,2,3,4,5,6,RoF")]</select>
+    </td></tr>
+    <tr><td>[r:GL("Attack Modifier")]</td><td>
+      <select name="traitMod">[r:DropdownFromList(traitMod,traitModDropdown)]</select>
+    </td></tr>
+    <tr><td>[r:GL("Damage Modifier")]</td><td>
+      <select name="damageMod">[r:DropdownFromList(damageMod, "-4,-3,-2,-1,0,1,2,3,4")]</select>
+    </td></tr>
+    <tr><td>[r:GL("Ammo Used")]</td><td>
+      <select name="ammo">[r:DropdownFromList(ammo, "0,1,2,3,4,5,6,RoF,RoF*RoF,RoF*5")]</select>
+    </td></tr>
+    <tr><td>[r:GL("Sets State")]</td><td>
+      <select name="setState">[r:DropdownFromList(setState, combatStates)]</select>
+    </td></tr>
+    <tr><td>[r:GL("Requires Edge")]</td><td>
+      <select name="reqEdge">[r:DropdownFromList(reqEdge, edges)]</select>
+    </td></tr>
+  </table>
+  <input type="hidden" name="prop" value="[r:prop]"/>
+  <input type="hidden" name="name" value="[r:name]">
+  <input type="hidden" name="type" value="[r:type]">
+  <input type="submit" name="submit" value="Submit">
+  </form>
+  </body>
+</html>
+}]
+
+!!
+@@ @ConfigWeaponActionsWizardOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[r:macro.args]
+[h:name=json.get(macro.args,"name")]
+[h:labelName=json.get(macro.args,"labelName")]
+[h,if(labelName!="" && matches(labelName,name)==0): SL(name,labelName)]
+
+[h:prop=json.get(macro.args,"prop")]
+[h:type=json.get(macro.args,"type")]
+[h:desc=json.get(macro.args,"desc")]
+[h:rolls=json.get(macro.args,"rolls")]
+[h:traitMod=json.get(macro.args,"traitMod")]
+[h:damageMod=json.get(macro.args,"damageMod")]
+[h:ammo=json.get(macro.args,"ammo")]
+[h:setState=json.get(macro.args,"setState")]
+[h:setState=if(setState=="None","",setState)]
+[h:reqEdge=json.get(macro.args,"reqEdge")]
+[h:reqEdge=if(reqEdge=="None","",reqEdge)]
+
+[SPU(prop+"~desc",desc)]
+[SPU(prop+"~rolls",rolls)]
+[SPU(prop+"~traitMod",traitMod)]
+[SPU(prop+"~damageMod",damageMod)]
+[SPU(prop+"~ammo",ammo)]
+[SPU(prop+"~setState",setState)]
+[SPU(prop+"~reqEdge",reqEdge)]
+[closeDialog("ConfigWeaponActionsWizard")]
+[macro("EditConfigItems@this"):"WeaponActions"]
+
+!!
+@@ @ConfigureGearAspect
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[h:macroName=getMacroName()+"@this"]
+[h:okMacro="ConfigureGearAspectOK@this")]
+
+[h:step=json.get(macro.args,"step")]
+[h:prop=json.get(macro.args,"prop")]
+[h:name=json.get(macro.args,"name")]
+[h:type=json.get(macro.args,"type")]
+[h:submit=json.get(macro.args,"submit")]
+[h:attr=json.get(macro.args,"attr")]
+
+[h:tag=json.get(macro.args,"weaponcb")]
+
+[h:t=SPLIT(attr,"~")]
+[h:attrType=lower(json.get(t,1))]
+[h:rtnMacro=json.get(macro.args,"macroName")]
+[h:step=0]
+[h:weaponLabels=json.fromList(GSP("GearWeaponLabels"))]
+[h:gadgetLabels=json.fromList(GSP("GearGadgetLabels"))]
+[h:ammoTypes=json.fromList(GSP("WeaponAmmoTypes"))]
+
+<!-- thinking better of it - call functions to create display for each inside html form -->
+[h:settingProp=prop+"~tag~"+json.get(macro.args,"weaponcb")+"~"+"Weapon"]
+
+[h:data=GSP(settingProp)]
+
+[h:cbList=getStrProp(data,"weaponTraits")]
+
+[if(submit=='Remove'), code:{
+  [Debug(macro.args,"macro.args from remove")]
+  [h:t=SPLIT(json.get(macro.args,"attr"),"~")]
+
+  [h:SPU(settingProp,"")]
+  [h:name=json.get(macro.args,"name")]
+  [h:passedArgs=json.set("","name",name)]
+  [h:prop=json.get(macro.args,"prop")]
+  [h:passedArgs=json.set(passedArgs,"prop",prop)]
+  [h:type=json.get(macro.args,"type")]
+  [h:passedArgs=json.set(passedArgs,"type",type)]
+  [h:passedArgs=json.set(passedArgs,"step",0)]
+  [macro("ConfigGearWizard@Lib:Rules"):passedArgs]
+  [closeDialog(getMacroName())]
+  [abort(0)]
+};{}]
+
+[h:name=GL(name)]
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:GL(name)] Step [r:step]</h1>
+    <form name="EditDescr" method='json' action="[r:macroLinkText(okMacro,"gm")]">
+      <table width="100%" border="1">
+      [r:a=GetGearAspectTable(prop,name,"tag",tag,attrType)]
+      </table>
+[r:CheckBoxList(cbList,"WeaponActions")]
+      <input type="hidden" name="prop" value="[r:prop]">
+      <input type="hidden" name="macroName" value="[r:macroName]">
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="effType" value="add">
+      <input type="hidden" name="attr" value="[r:attr]">
+      <center><input type="submit" name="submit" value='[r:GL("Save")]'/> </center>
+    </form>
+  </body>
+  </html>
+}]
+
+!!
+@@ @ConfigureGearAspectOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[closeDialog("ConfigureGearAspect")]
+[h:weaponLabels=lower(json.fromList(GSP("GearWeaponLabels")))]
+[h:gadgetLabels=lower(json.fromList(GSP("GearGadgetLabels")))]
+[h:tagType=json.get(macro.args,"attr")]
+[h:tagType=SPLIT(tagType,"~")]
+[h:tagType=json.get(tagType,1)]
+[h:prop=json.get(macro.args,"prop")+"~tag~"+json.get(macro.args,"tag")+"~"+tagType]
+[h:saveJSON=""]
+[h:Debug(macro.args,"macro.args from ConfigureGearAspectOK")]
+[r,foreach(w,weaponLabels,""), code:{
+  [h,switch(w), code:
+  case "skill": {
+    [h:value=json.get(macro.args,"skill")]
+    [h:value=listAppend(value,json.get(macro.args,"skillbonus"))]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  case "range": {
+    [h:value=json.get(macro.args,"rangeshort")]
+    [h:value=listAppend(value,json.get(macro.args,"rangemedium"))]
+    [h:value=listAppend(value,json.get(macro.args,"rangelong"))]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  case "damage": {
+    [h:value=json.get(macro.args,"damage")]
+    [h:damagetraitbonus=json.get(macro.args,"damagetraitbonus")]
+    [h:damagetraitbonus=if(damagetraitbonus=="Nothing",0,damagetraitbonus)]
+    [h:value=listAppend(value,damagetraitbonus)]
+    [h:damagemodbonus=json.get(macro.args,"damagemodbonus")]
+    [h:value=listAppend(value,damagemodbonus)]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  case "raisedamage": {
+    [h:value=json.get(macro.args,"raisedamage")]
+    [h:raisedamagebonus=json.get(macro.args,"raisedamagebonus")]
+    [h:value=listAppend(value,raisedamagebonus)]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  case "ammo": {
+    [h:value=json.get(macro.args,"ammo")]
+    [h:capacity    =json.get(macro.args,"capacity")]
+    [h:value=listAppend(value,capacity)]
+    [h:loadtime   = json.get(macro.args,"loadtime")]
+    [h:value=listAppend(value,loadtime)]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  case "ap": {
+    [h:value=json.get(macro.args,"ap")]
+    [h:heavyweapon=json.get(macro.args,"heavyweapon")]
+    [h:value=string(value)+heavyweapon]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  };
+  default: {
+    [h:value=json.get(macro.args,w)]
+    [h:saveJSON=setStrProp(saveJSON,w,value)]
+  }]
+}]
+[h:keys=json.fields(macro.args)]
+[h:weaponTraits=""]
+[r,foreach(k,keys,""), code:{
+  [if(startsWith(k,"cb_")):weaponTraits=listAppend(weaponTraits,json.get(macro.args,k))]
+}]
+[h:saveJSON=setStrProp(saveJSON,"weaponTraits",weaponTraits)]
+[Debug(saveJSON,prop)]
+[SPU(prop,saveJSON)]
+[h:name=json.get(macro.args,"name")]
+[h:passedArgs=json.set("","name",name)]
+[h:prop=json.get(macro.args,"prop")]
+[h:passedArgs=json.set(passedArgs,"prop",prop)]
+[h:type=json.get(macro.args,"type")]
+[h:passedArgs=json.set(passedArgs,"type",type)]
+[h:passedArgs=json.set(passedArgs,"step",0)]
+[macro("ConfigGearWizard@Lib:Rules"):passedArgs]
+
+!!
+@@ @GearAddDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[h,macro("GetGearAddible@this"):""]
+[h:list=macro.return]
+[h:keys=json.fields(list)]
+[r,foreach(k,keys,""), code:{
+  [h:alist=json.get(list,k)]
+  [h:alist=listSort(alist,"A")]
+  [h:prefix=GPP(k)]
+  [r,foreach(l,alist,"</option>"), code:{
+    [h:value=prefix+l]
+    <option value="[r:value]">[r:GL(k)]-[r:GL(l)]</option>
+  }]
+}]
+
+!!
+@@ @GearInputFields
+@PROPS@ fontColor=green;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[h:fieldName=lower(arg(0))]
+[h:currentValue=arg(1)]
+[h:displayName=arg(2)]
+[h:traitList=SortList(GSP("Attributes"),"A")]
+[h:traitList=listAppend("Nothing",traitList)]
+[h:modList=SortList(GSP("OtherStats"),"A")]
+[h:modList=listAppend("-4,-3,-2,-1,0,1,2,3,4",modList)]
+
+[r,switch(fieldName), code:
+  case "skill": {
+    [h:list=GetSettingTraitList()]
+    [h:list=listAppend(list,"d4e,d6e,d8e,d10e,d12e")]
+    [h:trait=listGet(currentValue,0)]
+    [h:bonus=listGet(currentValue,1)]
+    <select name="[r:fieldName]">
+    [r:a=DropdownFromList(trait,list)]
+    </select>
+    </select>
+    +<select name="skillbonus">
+      [r:a=DropdownFromList(bonus,modList)]
+    </select>
+  };
+  case "range":{
+    [h:short=listGet(currentValue,0)]
+    [h:short=if(short=="",0,short)]
+    [h:medium=listGet(currentValue,1)]
+    [h:medium=if(medium=="",0,medium)]
+    [h:long=listGet(currentValue,2)]
+    [h:long=if(long=="",0,long)]
+    [r:GL("Short")]
+    <input type="text" name="rangeshort" size="4" value="[r:short]">
+    [r:GL("Medium")]
+    <input type="text" name="rangemedium" size="4" value="[r:medium]">
+    [r:GL("Long")]
+    <input type="text" name="rangelong" size="4" value="[r:long]">
+  };
+  case "reach":{
+    <select name="[r:fieldName]">
+    [r:a=DropdownFromList(currentValue,"0,1,2")]
+    </select>
+  };
+  case "ammo": {
+    [h:ammotype = listGet(currentValue,0)]
+    [h:capacity    = listGet(currentValue,1)]
+    [h:capacity=if(capacity=="",0,capacity)]
+    [h:loadtime   = listGet(currentValue,2)]
+    [h:list=GSP("WeaponAmmoTypes")]
+    Type: <select name="[r:fieldName]">
+    [r:a=DropdownFromList(ammotype,list)]
+    </select>
+    Capacity <input type="text" name="capacity" size="3" value="[r:capacity]">
+    Load Time 
+    <select name="loadtime">
+    [r:a=DropdownFromList(loadtime,"0,1,2,3,4,5,6,7,8,9,10,11,12")]
+    </select>
+  };
+  case "hands": {
+    <select name="[r:fieldName]">
+    [r:a=DropdownFromList(currentValue,"0,1,2")]
+    </select>
+  };
+  case "ap": {
+    [h:ap=listGet(currentValue,0)]
+    [h,if(endsWith(currentValue,"h") || endsWith(currentValue,"H")), code:{
+      [h:ap=substring(ap,0,length(ap)-1)] 
+      [h:checked="checked"]
+    };{
+      [h:checked=""]
+    }]
+    <input type="text" name="[r:fieldName]" size="3" value="[r:ap]">
+    <input type='checkbox' [r:checked]  name='heavyweapon'  value='H'>[r:GL("Heavy Weapon")]</input>
+  };
+  case "rof": {
+    <select name="[r:fieldName]">
+    [r:a=DropdownFromList(currentValue,"0,1,2,3,4,5,6,7,8,9,10,11,12")]
+    </select>
+  };
+  case "damage":{
+    [h:damage=listGet(currentValue,0)]
+    [h:traitBonus=listGet(currentValue,1)]
+    [h:traitBonus=if(traitBonus=="","Nothing",traitBonus)]
+    [h:modBonus=listGet(currentValue,2)]
+    [h:modBonus=if(modBonus=="",0,modBonus)]
+    <input type="text" name="[r:fieldName]" size="8" value="[r:damage]">
+    +<select name="damagetraitbonus">
+      [r:a=DropdownFromList(traitBonus,traitList)]
+    </select>
+    +<select name="damagemodbonus">
+      [r:a=DropdownFromList(modBonus,modList)]
+    </select>
+  };
+  case "raisedamage":{
+    [h:damage=listGet(currentValue,0)]
+    [h:damage=if(damage=="",0,damage)] 
+    [h:modBonus=listGet(currentValue,1)]
+    [h:modBonus=if(modBonus=="",0,modBonus)]
+    <select name="[r:fieldName]">
+      [r:a=DropdownFromList(damage,modList)]
+    </select>
+    +<select name="raisedamagebonus">
+      [r:a=DropdownFromList(modBonus,modList)]
+    </select>
+  };
+  case "tag":{
+    <input type="text" name="[r:fieldName]" size="20" value="[r:currentValue]">
+  };
+  case "notes":{
+    <input type="text" name="[r:fieldName]" size="40" value="[r:currentValue]">
+  };
+  default:{
+    <input type="text" name="[r:fieldName]" size="3" value="[r:currentValue]">
+  }
+]
+
+!!
+@@ @GetGearAddible
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+<!-- this returns a list of affectable items in a json object with string lists inside -->
+[h:a=""]
+[h:a=json.set(a,"GearTypes",decode(getLibProperty("GearTypes",GSTN())))]
+[h:a=json.set(a,"Movements",decode(getLibProperty("Movements",GSTN())))]
+[h:a=json.set(a,"Powers",decode(getLibProperty("Powers",GSTN())))]
+[h:a=json.set(a,"MonstrousAbilities",decode(getLibProperty("MonstrousAbilities",GSTN())))]
+[h:a=json.set(a,"Edges",decode(getLibProperty("Edges",GSTN())))]
+[h:a=json.set(a,"MajorHindrances",decode(getLibProperty("MajorHindrances",GSTN())))]
+[h:a=json.set(a,"MinorHindrances",decode(getLibProperty("MinorHindrances",GSTN())))]
+[h:a=json.set(a,"ArcaneBackgrounds",decode(getLibProperty("ArcaneBackgrounds",GSTN())))]
+[h:macro.return=a]
+
+!!
+@@ @GetGearAspectTable
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[h:prop=arg(0)]
+[h:name=arg(1)]
+[h:effType=arg(2)]
+[h:attr=arg(3)]
+[h:attrType=arg(4)]
+[h:data=""]
+[h:weaponLabels=json.fromList(GSP("GearWeaponLabels"))]
+[h:gadgetLabels=json.fromList(GSP("GearGadgetLabels"))]
+[h:ammoTypes=json.fromList(GSP("WeaponAmmoTypes"))]
+[h:getProp=prop+"~"+effType+"~"+attr+"~"+attrType]
+[r,if(attrType=="weapon"), code:{
+  [r:a=TableHeader("Name, Value")]
+  [h:data=GSP(getProp)]
+  [r,foreach(w,weaponLabels,""): "<tr><td>" + w + "</td><td>" + GearInputFields(w,getStrProp(data,w),"") + "</td></tr>"]
+}]
+
+!!
+@@ @ParseWeaponDamageString
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.10 - Setting Gear;tooltip=;minWidth=
+[h:string=arg(0)]
+[h:string=SPLIT(string,"~")]
+[h:damage=json.get(string,0)]
+[h:damage=if(damage=="",0,damage)]
+[h:rtn=json.set("","damage",damage)]
+[h,if(json.length(string)>1), code:{
+  [h:traitBonus=json.get(string,1)]
+  [h:rtn=json.set(rtn,"traitBonus",traitBonus)]
+};{
+  [h:rtn=json.set(rtn,"traitBonus","None")]
+}]
+[h,if(json.length(string)>2), code:{
+  [h:modBonus=json.get(string,2)]
+  [h:rtn=json.set(rtn,"modBonus",modBonus)]
+};{
+  [h:rtn=json.set(rtn,"modBonus",0)]
+}]
+[r:rtn]
+
+!!
+@@ @ConfigRollsWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=false;applyToSelected=false;group=5.11 - Setting Rolls;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[h:macroName = getMacroName()+"@this"]
+[h:d=prop+"~desc"]
+[h:form=prop+"~formula"]
+
+[h:desc=GD(d)]
+[h:formula=GSP(form)]
+step [r:step]
+<!-- save based on old step number -->
+[r,switch(step), code:
+  case 1: {
+    [h:labelName=json.get(macro.args,"labelName")]
+    [h,if(labelName!=""): a=SL(name,labelName)]
+    [h:SPU(d,json.get(macro.args,"desc"))]
+    [h:SPU(form,json.get(macro.args,"form"))]
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  case 2: { 
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  default : { blither2 }
+]
+
+[h:submit=json.get(macro.args,"submit")]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:upper(GL(name),1)] Step [r:step]</h1>
+  [r,if(step==1), code:{
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      [r:GL("Label Name")]: <input type="text" name="labelName" size="40" value="[r:GL(name)]"/><br>
+      [r:GL("Description")]: <input type="text" name="desc" size="40" value="[r:GD(d)]"/><br>
+      [r:GL("Formula")]: <input type="text" name="form" size="40" value="[r:formula]"/><br>
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>    
+  };{}]
+  [r,if(step==2), code:{
+    <h3>[r:GL("Default Value and Formula")]</h3>
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Prev")]'/>
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  </body>
+  </html>
+}]
+
+!!
+@@ @ConfigSkillsWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=false;applyToSelected=false;group=5.12 - Setting Stats;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[h:macroName = getMacroName()+"@this"]
+[h:d=prop+"~desc"]
+[h:def=prop+"~default"]
+[h:attr=prop+"~attr"]
+
+[h:desc=GD(d)]
+[h:default=GSP(def)]
+[h:default=if(default=="","d4e-2",default)]
+[h:linkedAttribute=GSP(attr)]
+[h:linkedAttribute=if(linkedAttribute=="","None",linkedAttribute)]
+step [r:step]
+<!-- save based on old step number -->
+[r,switch(step), code:
+  case 1: {
+    [h:SPU(d,json.get(macro.args,"desc"))]
+    [h:SPU(def,json.get(macro.args,"def"))]
+    [h:SPU(attr,json.get(macro.args,"attr"))]
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  case 2: { 
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  default : { blither2 }
+]
+
+[h:submit=json.get(macro.args,"submit")]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+[h:settingAttrs=decode(getLibProperty("Attributes",GSTN()))]
+[h:settingAttrs=listAppend("None",settingAttrs)]
+
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:upper(GL(name),1)] Step [r:step]</h1>
+  [r,if(step==1), code:{
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      [r:GL("Description")]: <input type="text" name="desc" size="40" value="[r:GD(d)]"/><br>
+      [r:GL("Default")]: <select name="def" >
+        [r:DropdownFromList(default,"d4e-2,d4e,d6e,d8e,d10e,d12e,d4,d6,d8,d10,d12")]
+      </select> <br>
+      [r:GL("Linked Attribute")]: <select name="attr" >
+        [r:DropdownFromList(linkedAttribute,settingAttrs)]
+      </select> <br>
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>    
+  };{}]
+  [r,if(step==2), code:{
+    <h3>[r:GL("Default Value and Linked Attribute")]</h3>
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Prev")]'/>
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}] 
+  </body>
+  </html>
+}]
+
+!!
+@@ @EditFrameLangForm
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=3;color=default;playerEditable=false;applyToSelected=false;group=5.2 - Labels And Language;tooltip=;minWidth=
+[h:langs=""]
+[h:langs=json.set(langs,"aa","Afar")]
+[h:langs=json.set(langs,"ab","Abkhazian")]
+[h:langs=json.set(langs,"af","Afrikaans")]
+[h:langs=json.set(langs,"ak","Akan")]
+[h:langs=json.set(langs,"sq","Albanian")]
+[h:langs=json.set(langs,"am","Amharic")]
+[h:langs=json.set(langs,"ar","Arabic")]
+[h:langs=json.set(langs,"an","Aragonese")]
+[h:langs=json.set(langs,"hy","Armenian")]
+[h:langs=json.set(langs,"as","Assamese")]
+[h:langs=json.set(langs,"av","Avaric")]
+[h:langs=json.set(langs,"ae","Avestan")]
+[h:langs=json.set(langs,"ay","Aymara")]
+[h:langs=json.set(langs,"az","Azerbaijani")]
+[h:langs=json.set(langs,"ba","Bashkir")]
+[h:langs=json.set(langs,"bm","Bambara")]
+[h:langs=json.set(langs,"eu","Basque")]
+[h:langs=json.set(langs,"be","Belarusian")]
+[h:langs=json.set(langs,"bn","Bengali")]
+[h:langs=json.set(langs,"bh","Bihari")]
+[h:langs=json.set(langs,"bi","Bislama")]
+[h:langs=json.set(langs,"bo","Tibetan")]
+[h:langs=json.set(langs,"bs","Bosnian")]
+[h:langs=json.set(langs,"br","Breton")]
+[h:langs=json.set(langs,"bg","Bulgarian")]
+[h:langs=json.set(langs,"my","Burmese")]
+[h:langs=json.set(langs,"ca","Catalan; Valencian")]
+[h:langs=json.set(langs,"cs","Czech")]
+[h:langs=json.set(langs,"ch","Chamorro")]
+[h:langs=json.set(langs,"ce","Chechen")]
+[h:langs=json.set(langs,"zh","Chinese")]
+[h:langs=json.set(langs,"cu","Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic")]
+[h:langs=json.set(langs,"cv","Chuvash")]
+[h:langs=json.set(langs,"kw","Cornish")]
+[h:langs=json.set(langs,"co","Corsican")]
+[h:langs=json.set(langs,"cr","Cree")]
+[h:langs=json.set(langs,"cy","Welsh")]
+[h:langs=json.set(langs,"cs","Czech")]
+[h:langs=json.set(langs,"da","Danish")]
+[h:langs=json.set(langs,"de","German")]
+[h:langs=json.set(langs,"dv","Divehi; Dhivehi; Maldivian")]
+[h:langs=json.set(langs,"nl","Dutch; Flemish")]
+[h:langs=json.set(langs,"dz","Dzongkha")]
+[h:langs=json.set(langs,"el","Greek, Modern (1453-)")]
+[h:langs=json.set(langs,"en","English")]
+[h:langs=json.set(langs,"eo","Esperanto")]
+[h:langs=json.set(langs,"et","Estonian")]
+[h:langs=json.set(langs,"eu","Basque")]
+[h:langs=json.set(langs,"ee","Ewe")]
+[h:langs=json.set(langs,"fo","Faroese")]
+[h:langs=json.set(langs,"fa","Persian")]
+[h:langs=json.set(langs,"fj","Fijian")]
+[h:langs=json.set(langs,"fi","Finnish")]
+[h:langs=json.set(langs,"fr","French")]
+[h:langs=json.set(langs,"fy","Western Frisian")]
+[h:langs=json.set(langs,"ff","Fulah")]
+[h:langs=json.set(langs,"ka","Georgian")]
+[h:langs=json.set(langs,"de","German")]
+[h:langs=json.set(langs,"gd","Gaelic; Scottish Gaelic")]
+[h:langs=json.set(langs,"ga","Irish")]
+[h:langs=json.set(langs,"gl","Galician")]
+[h:langs=json.set(langs,"gv","Manx")]
+[h:langs=json.set(langs,"el","Greek, Modern (1453-)")]
+[h:langs=json.set(langs,"gn","Guarani")]
+[h:langs=json.set(langs,"gu","Gujarati")]
+[h:langs=json.set(langs,"ht","Haitian; Haitian Creole")]
+[h:langs=json.set(langs,"ha","Hausa")]
+[h:langs=json.set(langs,"he","Hebrew")]
+[h:langs=json.set(langs,"hz","Herero")]
+[h:langs=json.set(langs,"hi","Hindi")]
+[h:langs=json.set(langs,"ho","Hiri Motu")]
+[h:langs=json.set(langs,"hr","Croatian")]
+[h:langs=json.set(langs,"hu","Hungarian")]
+[h:langs=json.set(langs,"hy","Armenian")]
+[h:langs=json.set(langs,"ig","Igbo")]
+[h:langs=json.set(langs,"is","Icelandic")]
+[h:langs=json.set(langs,"io","Ido")]
+[h:langs=json.set(langs,"ii","Sichuan Yi")]
+[h:langs=json.set(langs,"iu","Inuktitut")]
+[h:langs=json.set(langs,"ie","Interlingue")]
+[h:langs=json.set(langs,"ia","Interlingua (International Auxiliary Language Association)")]
+[h:langs=json.set(langs,"id","Indonesian")]
+[h:langs=json.set(langs,"ik","Inupiaq")]
+[h:langs=json.set(langs,"is","Icelandic")]
+[h:langs=json.set(langs,"it","Italian")]
+[h:langs=json.set(langs,"jv","Javanese")]
+[h:langs=json.set(langs,"ja","Japanese")]
+[h:langs=json.set(langs,"kl","Kalaallisut; Greenlandic")]
+[h:langs=json.set(langs,"kn","Kannada")]
+[h:langs=json.set(langs,"ks","Kashmiri")]
+[h:langs=json.set(langs,"ka","Georgian")]
+[h:langs=json.set(langs,"kr","Kanuri")]
+[h:langs=json.set(langs,"kk","Kazakh")]
+[h:langs=json.set(langs,"km","Central Khmer")]
+[h:langs=json.set(langs,"ki","Kikuyu; Gikuyu")]
+[h:langs=json.set(langs,"rw","Kinyarwanda")]
+[h:langs=json.set(langs,"ky","Kirghiz; Kyrgyz")]
+[h:langs=json.set(langs,"kv","Komi")]
+[h:langs=json.set(langs,"kg","Kongo")]
+[h:langs=json.set(langs,"ko","Korean")]
+[h:langs=json.set(langs,"kj","Kuanyama; Kwanyama")]
+[h:langs=json.set(langs,"ku","Kurdish")]
+[h:langs=json.set(langs,"lo","Lao")]
+[h:langs=json.set(langs,"la","Latin")]
+[h:langs=json.set(langs,"lv","Latvian")]
+[h:langs=json.set(langs,"li","Limburgan; Limburger; Limburgish")]
+[h:langs=json.set(langs,"ln","Lingala")]
+[h:langs=json.set(langs,"lt","Lithuanian")]
+[h:langs=json.set(langs,"lb","Luxembourgish; Letzeburgesch")]
+[h:langs=json.set(langs,"lu","Luba-Katanga")]
+[h:langs=json.set(langs,"lg","Ganda")]
+[h:langs=json.set(langs,"mk","Macedonian")]
+[h:langs=json.set(langs,"mh","Marshallese")]
+[h:langs=json.set(langs,"ml","Malayalam")]
+[h:langs=json.set(langs,"mi","Maori")]
+[h:langs=json.set(langs,"mr","Marathi")]
+[h:langs=json.set(langs,"ms","Malay")]
+[h:langs=json.set(langs,"mk","Macedonian")]
+[h:langs=json.set(langs,"mg","Malagasy")]
+[h:langs=json.set(langs,"mt","Maltese")]
+[h:langs=json.set(langs,"mo","Moldavian")]
+[h:langs=json.set(langs,"mn","Mongolian")]
+[h:langs=json.set(langs,"mi","Maori")]
+[h:langs=json.set(langs,"ms","Malay")]
+[h:langs=json.set(langs,"my","Burmese")]
+[h:langs=json.set(langs,"na","Nauru")]
+[h:langs=json.set(langs,"nv","Navajo; Navaho")]
+[h:langs=json.set(langs,"nr","Ndebele, South; South Ndebele")]
+[h:langs=json.set(langs,"nd","Ndebele, North; North Ndebele")]
+[h:langs=json.set(langs,"ng","Ndonga")]
+[h:langs=json.set(langs,"ne","Nepali")]
+[h:langs=json.set(langs,"nl","Dutch; Flemish")]
+[h:langs=json.set(langs,"nn","Norwegian Nynorsk; Nynorsk, Norwegian")]
+[h:langs=json.set(langs,"nb","Bokmal, Norwegian; Norwegian Bokmal")]
+[h:langs=json.set(langs,"no","Norwegian")]
+[h:langs=json.set(langs,"ny","Chichewa; Chewa; Nyanja")]
+[h:langs=json.set(langs,"oc","Occitan (post 1500); Provencal")]
+[h:langs=json.set(langs,"oj","Ojibwa")]
+[h:langs=json.set(langs,"or","Oriya")]
+[h:langs=json.set(langs,"om","Oromo")]
+[h:langs=json.set(langs,"os","Ossetian; Ossetic")]
+[h:langs=json.set(langs,"pa","Panjabi; Punjabi")]
+[h:langs=json.set(langs,"fa","Persian")]
+[h:langs=json.set(langs,"pi","Pali")]
+[h:langs=json.set(langs,"pl","Polish")]
+[h:langs=json.set(langs,"pt","Portuguese")]
+[h:langs=json.set(langs,"ps","Pushto")]
+[h:langs=json.set(langs,"qu","Quechua")]
+[h:langs=json.set(langs,"rm","Romansh")]
+[h:langs=json.set(langs,"ro","Romanian")]
+[h:langs=json.set(langs,"ro","Romanian")]
+[h:langs=json.set(langs,"rn","Rundi")]
+[h:langs=json.set(langs,"ru","Russian")]
+[h:langs=json.set(langs,"sg","Sango")]
+[h:langs=json.set(langs,"sa","Sanskrit")]
+[h:langs=json.set(langs,"sr","Serbian")]
+[h:langs=json.set(langs,"hr","Croatian")]
+[h:langs=json.set(langs,"si","Sinhala; Sinhalese")]
+[h:langs=json.set(langs,"sk","Slovak")]
+[h:langs=json.set(langs,"sk","Slovak")]
+[h:langs=json.set(langs,"sl","Slovenian")]
+[h:langs=json.set(langs,"se","Northern Sami")]
+[h:langs=json.set(langs,"sm","Samoan")]
+[h:langs=json.set(langs,"sn","Shona")]
+[h:langs=json.set(langs,"sd","Sindhi")]
+[h:langs=json.set(langs,"so","Somali")]
+[h:langs=json.set(langs,"st","Sotho, Southern")]
+[h:langs=json.set(langs,"es","Spanish; Castilian")]
+[h:langs=json.set(langs,"sq","Albanian")]
+[h:langs=json.set(langs,"sc","Sardinian")]
+[h:langs=json.set(langs,"sr","Serbian")]
+[h:langs=json.set(langs,"ss","Swati")]
+[h:langs=json.set(langs,"su","Sundanese")]
+[h:langs=json.set(langs,"sw","Swahili")]
+[h:langs=json.set(langs,"sv","Swedish")]
+[h:langs=json.set(langs,"ty","Tahitian")]
+[h:langs=json.set(langs,"ta","Tamil")]
+[h:langs=json.set(langs,"tt","Tatar")]
+[h:langs=json.set(langs,"te","Telugu")]
+[h:langs=json.set(langs,"tg","Tajik")]
+[h:langs=json.set(langs,"tl","Tagalog")]
+[h:langs=json.set(langs,"th","Thai")]
+[h:langs=json.set(langs,"bo","Tibetan")]
+[h:langs=json.set(langs,"ti","Tigrinya")]
+[h:langs=json.set(langs,"to","Tonga (Tonga Islands)")]
+[h:langs=json.set(langs,"tn","Tswana")]
+[h:langs=json.set(langs,"ts","Tsonga")]
+[h:langs=json.set(langs,"tk","Turkmen")]
+[h:langs=json.set(langs,"tr","Turkish")]
+[h:langs=json.set(langs,"tw","Twi")]
+[h:langs=json.set(langs,"ug","Uighur; Uyghur")]
+[h:langs=json.set(langs,"uk","Ukrainian")]
+[h:langs=json.set(langs,"ur","Urdu")]
+[h:langs=json.set(langs,"uz","Uzbek")]
+[h:langs=json.set(langs,"ve","Venda")]
+[h:langs=json.set(langs,"vi","Vietnamese")]
+[h:langs=json.set(langs,"vo","Volapuk")]
+[h:langs=json.set(langs,"cy","Welsh")]
+[h:langs=json.set(langs,"wa","Walloon")]
+[h:langs=json.set(langs,"wo","Wolof")]
+[h:langs=json.set(langs,"xh","Xhosa")]
+[h:langs=json.set(langs,"yi","Yiddish")]
+[h:langs=json.set(langs,"yo","Yoruba")]
+[h:langs=json.set(langs,"za","Zhuang; Chuang")]
+[h:langs=json.set(langs,"zh","Chinese")]
+[h:langs=json.set(langs,"zu","Zulu")]
+<h3>[r:GL("CurrentFrameworkLanguage")]: [r:json.get(langs,GLL())]</H3>
+[h:keys=json.fields(langs,"json")]
+<form name="LanguageSelect"  method='json' action="[r:macroLinkText("EditFrameLangOK@this","gm","")]">
+<select name="framelang">
+[r,foreach(k,keys,"</option>"): "<option value='"+k+"'>"+k+" - " + json.get(langs,k)+"</option>"]
+</select>
+<input type="submit" value=[r:GL("ChangeLanguage")]>
+
+!!
+@@ @EditFrameLangOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=3;color=default;playerEditable=false;applyToSelected=false;group=5.2 - Labels And Language;tooltip=;minWidth=
+[h:lang=json.get(macro.args,"framelang")]
+[h:lang=setLibProperty("FrameworkLanguage",lang)]
+[macro("Manage Setting@this"):"LangsAndLabels"]
+
+!!
+@@ @EditLabelsForm
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=3;color=default;playerEditable=false;applyToSelected=false;group=5.2 - Labels And Language;tooltip=;minWidth=
+[h: class = "oddRow"]
+[h:lang=GLL()]
+<h3>[r:GL("LabelFormHeader")]</h3>
+[h:list=getMatchingLibProperties("l~"+lang+".*")]
+[h:cnt=json.length(list)]
+<table width="100%"><tr>
+<th>[r:GL("Label Property Name")]</th><th>[r:GL("Lable Property Value")]</th><th>[r:GL("EnglishTranslation")]</tr>
+[r,foreach(l,list,"<br>"),code:{
+  <tr class=[r:class=FC(class)]><td>
+  [h:linkIt=macroLinkText("EditProperty@this","gm",l)]
+  [r:line="<a href='"+linkIt+"'>"+l+"</a></td><td>"+decode(getLibProperty(l))+"</td> <td>"+decode(getLibProperty(replace(l,"~"+lang+"~","~en~")))+"</td></tr>"]
+}]
+</table>
+
+!!
+@@ @LabelChange
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.2 - Labels And Language;tooltip=;minWidth=
+[h:input("value| |Enter the text as it appears on the screen")]
+[h:value="l~en~"+value]
+[r:value]
+[ELP(value)]
+
+!!
+@@ @EditCSS
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.3 - Setting CSS;tooltip=;minWidth=
+[h:css=GetCSS()]
+<form name="EditCSS"  method='json' action="[r:macroLinkText("EditCSSOK@this","gm","")]">
+<textarea rows="10" cols="40" name="css">
+[r:css]
+</textarea><br>
+<input type="submit" value=[r:GL("Save")]>
+</form>
+
+!!
+@@ @EditCSSOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.3 - Setting CSS;tooltip=;minWidth=
+[r:css=json.get(macro.args,"css")]
+[h:label="CSS"]
+[h:selectTokens("Lib:Rules")]
+[h:ids=getSelected()]
+[h:switchToken(listGet(ids,0))]
+[h:idx=getMacroIndexes(label)]
+[h:setMacroCommand(idx, css)]  
+[macro("Manage Setting@this"): "CSS"]
+
+!!
+@@ @GetCSS
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.3 - Setting CSS;tooltip=;minWidth=
+[h:selectTokens("Lib:Rules")]
+[h:ids=getSelected()]
+[h:switchToken(listGet(ids,0))]
+[h:idx=getMacroIndexes("CSS")]
+[r:getMacroCommand(idx)]
+
+!!
+@@ @EditConfigItemWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=2;color=darkgray;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[r:macro.args]
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[h:macroName = getMacroName()+"@this"]
+
+[h:modtxt=GL("Modify Effect")]
+[h:addtxt=GL("Adder Effect")]
+[h:reptxt=GL("Replacer Effect")]
+[r,if(step==0), code:{
+  [h:d=prop+"~desc"]
+  [h:descr=GD(d)]
+  [h:m=prop+"~mod~.*"]
+  [h:a=prop+"~add~.*"]
+  [h:r=prop+"~rep~.*"]
+  [h:desc=GD(d)]
+
+  [macro("GetConfigEffectsJSON@Lib:Rules"):str=json.append("",m,a,r)]
+  [h:jeffs=macro.return]
+
+  [h:modstr= ""]
+  [h:addstr= ""]
+  [h:repstr= ""]
+
+  [h:jmods=json.get(jeffs,"mods")]
+  [h,foreach(j,jmods,""): modstr=modstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") + if(startsWith(json.get(j,"value"),"-") || startsWith(json.get(j,"value"),"+") ," "," +") + json.get(j,"value")+"<BR>"]   
+  [h:jmods=json.get(jeffs,"adds")]
+  [h,foreach(j,jmods,""): addstr=addstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name")+"<BR>"]   
+  [h:jmods=json.get(jeffs,"reps")]
+  [h,foreach(j,jmods,""): repstr=repstr+"<input type='radio' name='reset' value='"+j+"' />"+json.get(j,"name") +" "+ json.get(j,"value")+"<BR>"]   
+
+  [r:labelName=json.get(macro.args,"labelName")]
+  [h,if(labelName!=""): SL(name,labelName)]
+  [r:newDescr=json.get(macro.args,"newDescr")]
+  [h,if(newDescr!=descr && newDescr!=""): SPU(d,newDescr)] 
+
+};{}]
+
+[h:name=GL(name)]
+  
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:name] Step [r:step]</h1>
+  [r,if(step==0), code:{
+    <div>
+      <form name="EditDescr" method='json' action="[r:macroLinkText(getMacroName()+"@this","gm")]">
+        [r:GL("Label Name")]: <input type="text" name="labelName" size="40" value="[r:name]"/> 
+        <br>
+        [r:GL("Description")]: <input type="text" name="newDescr" size="40" value="[r:GD(d)]"/>
+        <input type="hidden" name="prop" value="[r:prop]"/>
+        <input type="hidden" name="name" value="[r:name]">
+        <input type="hidden" name="type" value="[r:type]">
+        <input type="hidden" name="step" value="0">
+        <input type="submit" value='[r:GL("Update")]'/>
+        <br>
+      </form>
+    </div>
+    <form name="Rest" method='json' action= "[r:macroLinkText("ResetEffect@this", "gm")]">
+    [r,if(modstr!=""): "<h2>"+GL("Modify Effects")+"</h2>"+modstr]
+    [r,if(addstr!=""): "<h2>"+GL("Addition Effects")+"</h2>"+addstr]
+    [r,if(repstr!=""): "<h2>"+GL("Replacement Effects")+"</h2>"+repstr]
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="name" value="[r:name]">
+    <input type="hidden" name="type" value="[r:type]">
+    <input type="hidden" name="macroName" value=[r:macroName]>
+    <input type="submit" value='[r:GL("Remove Effect")]'/>
+    </form><form name="EditEffects" method='json' action="[r:macroLinkText("EditConfigItemWizard@this","gm")]">
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="name" value="[r:name]">
+    <input type="hidden" name="type" value="[r:type]">
+    <input type="hidden" name="step" value="1">
+    <input type="submit" value='[r:GL("Add New Effect")]'/>
+    </form>
+  };{}]
+  [r,if(step==1), code:{
+    <h3>[r:GL("Pick Effect Type")]</h3>
+    <form name="Effects" method='json' action= "[r:macroLinkText("EditConfigItemWizard@this", "gm")]">
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="name" value="[r:name]">
+    <input type="hidden" name="type" value="[r:type]">
+    <input type="hidden" name="step" value="2">
+    <input type="radio" name="effType" value="mod" /> [r:modtxt]<br />
+    <input type="radio" name="effType" value="add" /> [r:addtxt]<br />
+    <input type="radio" name="effType" value="rep" /> [r:reptxt]<br />
+    <input type="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  [r,if(step==2), code:{
+    <form name="Effects" method='json' action= "[r:macroLinkText("EditConfigItemWizardOK@this", "gm")]">
+    [h:effType=json.get(macro.args,"effType")]
+    <input type="hidden" name="prop" value="[r:prop]"/>
+    <input type="hidden" name="macroName" value="[r:macroName]"/>
+    <input type="hidden" name="name" value="[r:name]"/>
+    <input type="hidden" name="type" value="[r:type]"/>
+    <input type="hidden" name="step" value="3"/>
+    <input type="hidden" name="effType" value="[r:effType]"/>
+    <table><tr>
+      <td>[r:GL("Select Attribute to Adjust")] : </td><td>
+      <select name="attr">
+        [r,if(effType=="mod"): str=AttrModDropdown()]
+        [r,if(effType=="add"): str=AttrAddDropdown()]
+        [r,if(effType=="rep"): str=AttrRepDropdown()]
+      </select></td></tr><tr>
+      <td>[r:GL("Mod Amnt")]</td><td>
+        [r,if(effType=="mod"): "<select name='amnt'>"+ ModiferDropdown() + "</select>"]
+        [r,if(effType=="rep"):  "<select name='amnt'>"+ ReplacerDropdown() + "</select>"]
+     </td></tr><tr>
+     <td>[r:GL("When")]</td><td>
+      <select name="Conditional">
+        [r:str=ConditionalDropDown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Select State")]</td><td>
+      <select name="ConditionState">
+        [r:str=GetCombatStatesDropdown()]
+     </select></td></tr><tr>
+     <td>[r:GL("Or Enter Condition Text")]</td><td>
+     <input type="text" name="ConditionText"/></td><tr><td colspan="2">
+     <input type="submit" value='[r:GL("Update")]'/> 
+     </td></tr></table>
+   </form>
+  };{}]
+  <div align="center">
+    <form action= "[r:macroLinkText("EditConfigItems@this", "gm", type)]">
+     <input type="submit" value='[r:GL("Done")]'/> 
+   </form>
+  </div>
+  </body>
+  </html>
+}]
+
+!!
+@@ @EditConfigItemWizardOK
+@PROPS@ fontColor=red;autoExecute=true;fontSize=1.00em;sortBy=2;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[h:step=json.get(macro.args,"step")]
+[h:prop=json.get(macro.args,"prop")]
+[h:name=json.get(macro.args,"name")]
+[h:type=json.get(macro.args,"type")]
+[h:effType=json.get(macro.args,"effType")]
+[h:amnt=json.get(macro.args,"amnt")]
+[h:attr=json.get(macro.args,"attr")]
+[h:cond=json.get(macro.args,"Conditional")]
+[h:condState=json.get(macro.args,"ConditionState")]
+[h:condText=json.get(macro.args,"ConditionText")]
+[h:returnMacro=json.get(macro.args,"macroName")]
+<!-- if effect type is 'add' then set the value to the attr, otherwise amnt -->
+[h:amntStr=if(effType=="add",attr,amnt)]
+[h:amntStr=if(cond=='A',amntStr,amntStr+","+cond)]
+[h:amntStr=if(cond=='S',amntStr+","+condState,amntStr)]
+[h:amntStr=if(cond=='N',amntStr+","+condState,amntStr)]
+[h:amntStr=if(cond=='C',amntStr+","+condText,amntStr)]
+<br>[r:amntStr]
+[h:job=json.set("","prop",prop+"~"+effType+"~"+attr,"value",amntStr)]
+[r,macro("SettingPropUpdate@this"): job]
+[h:macroName=json.get(macro.args,"macroName")]
+[h:macroArgs=json.set("","step",0,"prop",prop,"name",name,"type",type)]
+[h,macro(returnMacro): macroArgs]
+
+!!
+@@ @EditConfigItems
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=0;color=darkgray;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[r:item=macro.args]
+[h:headers=GetConfigItemHeader(item)]
+[h:macroName=getMacroName()+"@this"]
+[h,switch(item), code:
+    case "Skills": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="s~"] 
+     [h:type="Skills"]
+   };
+    case "Edges": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="e~"] 
+     [h:type="Edges"]
+   };
+    case "Races": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="r~"] 
+     [h:type="Races"]
+   };
+    case "MajorHindrances": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="mj~"] 
+     [h:type="MajorHindrances"]
+   };
+    case "MinorHindrances": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="mn~"] 
+     [h:type="MinorHindrances"]
+   };
+    case "MonstrousAbilities": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="ma~"] 
+     [h:type="MonstrousAbilities"]
+   };
+    case "ArcaneBackgrounds": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="ab~"] 
+     [h:type="ArcaneBackgrounds"]
+   };
+    case "DerivedStats": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="ds~"] 
+     [h:type="DerivedStats"]
+   };
+    case "OtherStats": { 
+     [h:list=GSP("OtherStats")] 
+     [h:pre="os~"] 
+     [h:type="OtherStats"]
+    };
+    case "Rolls": { 
+     [h:list=GSP("Rolls")] 
+     [h:pre="ro~"] 
+     [h:type="Rolls"]
+   };
+    case "Powers": { 
+     [h:list=GSP("Powers")] 
+     [h:pre="po~"] 
+     [h:type="Powers"]
+   };
+    case "Gear": { 
+     [h:list=GSP("Gear")]
+     [h:pre="ge~"] 
+     [h:type="Gear"]
+   };
+    case "WeaponActions": { 
+     [h:list=GSP("WeaponActions")] 
+     [h:pre="wa~"] 
+     [h:type="WeaponActions"]
+   };
+    case "CombatStates": { 
+     [h:list=GSP("CombatStates")] 
+     [h:pre="cs~"] 
+     [h:type="CombatStates"]
+   };
+   default : { blither }
+]
+[h:list=listSort(list,"A")]
+[h:class="oddRow"]
+[h:closeDialog("Manage Setting")]
+[h:closeDialog("EditConfigItemWizard")]
+EditConfigItems list [r:list]<br>
+[frame(getMacroName(),"width=300; height=200") : {
+<html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+    <table width="100%" border='1'>
+    [r:headers]
+[r,foreach(l,list,""), code:{
+  <tr class=[r:class]>
+    [h:passedArgs=json.set("","step",0,"prop",pre+l,"name",l,"type",item)]
+    [r:GCIL(l,pre,type)]
+    [h:class=FC(class)]
+  </tr>
+}]
+  </table>
+  <div align="center">
+    <form name="Rest" action= "[r:macroLinkText("Manage Setting@this", "gm")]">
+    <input type="submit" name="submit" value="Done">
+    </form>
+  </div>
+</body>
+</html>
+}]
+
+!!
+@@ @GetConfigEffectsJSON
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=2;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[h:m=arg(0)]
+[h:a=arg(1)]
+[h:r=arg(2)]
+[h:t=GSTN()]
+[h:mods=getMatchingLibProperties(m,GSTN(),"json")]
+[h:adds=getMatchingLibProperties(a,GSTN(),"json")]
+[h:reps=getMatchingLibProperties(r,GSTN(),"json")]
+[h:jrtn=""]
+[h:jmods=""]
+[h,foreach(m,mods), code:{
+  [h:v=GSP(m)]
+  [h,if(startsWith(v,"Lib:")==1), code:{[a=1]};{
+    [h:jlist=SPLIT(m,"~")]
+    [h:n=upper(json.get(jlist,json.length(jlist)-1),1)]
+    [h:job=json.set("","prop",m,"name",n,"value",v)]
+    [h,if(v!=""): jmods=json.append(jmods,job)]
+  }]
+}]
+[h:jadds=""]
+[h,foreach(m,adds), code:{
+  [h:v=GSP(m)]
+  [h,if(startsWith(v,"Lib:")==1), code:{[a=1]};{
+    [h:jlist=SPLIT(m,"~")]
+    [h:n=upper(json.get(jlist,json.length(jlist)-1),1)]
+    [h:job=json.set("","prop",m,"name",n,"value",v)]
+    [h,if(v!=""): jadds=json.append(jadds,job)]
+  }]
+}]
+[h:jreps=""]
+[h,foreach(m,reps), code:{
+  [h:v=GSP(m)]
+  [h,if(startsWith(v,"Lib:")==1), code:{[a=1]};{
+    [h:jlist=SPLIT(m,"~")]
+    [h:n=upper(json.get(jlist,json.length(jlist)-1),1)]
+    [h:job=json.set("","prop",m,"name",n,"value",v)]
+    [h,if(v!=""): jreps=json.append(jreps,job)]
+  }]
+}]
+[h:jrtn=json.set("","mods",jmods,"adds",jadds,"reps",jreps)]
+[h:macro.return=jrtn]
+
+!!
+@@ @GetConfigItemHeader
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[h:item=arg(0)]
+[r,switch(item), code:
+    case "ArcaneBackgrounds": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Skill")]</th>
+      <th>[r:GL("Powers(PP)")]</th>
+      <th>[r:GL("Backlash") + "-" + GL("Effect")]</th>
+      <th>[r:GL("Powers")]</th></tr>
+   };
+    case "Skills": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Default")]</th>
+      <th>[r:GL("Linked Attribute")]</th></tr>
+   };
+    case "DerivedStats": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Default")]</th>
+      <th>[r:GL("Formula") + "-" + GL("Effect")]</th></tr>
+   };
+    case "OtherStats": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Default")]</th>
+      <th>[r:GL("Formula") + "-" + GL("Effect")]</th></tr>
+   };
+    case "Rolls": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Formula") + "-" + GL("Effect")]</th></tr>
+   };
+    case "Powers": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th></tr>
+   };
+    case "Gear": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Visible")]</th>
+      <th>[r:GL("Category")]</th>
+      <th>[r:GL("Cost")]</th>
+      <th>[r:GL("Weight")]</th>
+     </tr>
+   };
+    case "WeaponActions": { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Rolls")]</th>
+      <th>[r:GL("Trait Mod")]</th>
+      <th>[r:GL("Damage Mod")]</th>
+      <th>[r:GL("Ammo Used")]</th>
+     </tr>
+   };
+   default : { 
+      <tr><th>[r:GL(item)]</th>
+      <th>[r:GL("Description")]</th>
+      <th>[r:GL("Modfies")]</th>
+      <th>[r:GL("Adds")]</th>
+      <th>[r:GL("Replaces")]</th></tr>
+   }
+]
+
+!!
+@@ @GetConfigItemLine
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+<!-- aliased to GCIL -->
+[h:i=lower(arg(0))]
+[h:pre=arg(1)]
+[h:type=arg(2)]
+[r,switch(type), code:
+  case "ArcaneBackgrounds": { 
+    <td>
+    [h:p=pre+lower(i)+"~"]
+    [h:skillNameType=GSP(p+"skillNameType",GSTN())]
+    [h:skillName=GSP(p+"skillName",GSTN())]
+    [h:powerPointMethod=GSP(p+"powerPointMethod",GSTN())]
+    [h:startingPowerPoints=GSP(p+"startingPowerPoints",GSTN())]
+    [h:startingPowers=GSP(p+"startingPowers",GSTN())]
+    [h,if(startingPowers==""): startPowStr=""; startPowStr=startingPowers+"("+startingPowerPoints+")"]
+
+    [h:backlash=GSP(p+"backlash",GSTN())]
+    [h:backlashRoll=GSP(p+"backlashRoll",GSTN())]
+    [h:backlashEffect=GSP(p+"backlashEffect",GSTN())]
+    [h,if(backlash=="No" || backlash==""): blStr="None"; blStr=GL(backlashEffect)+" " + GL("when") + " " +GL(skillName) +" " +GL("rolls") + " " + backlashRoll]
+
+    [h:powerList=GSP(p+"powerList",GSTN())]
+    [h:settingPowers=GSP("Powers",GSTN())]
+    [h:allFlag=if(powerList==settingPowers,1,0)]
+
+    [h:passedArgs=json.set("","ABName",i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"skillNameType",skillNameType)]
+    [h:passedArgs=json.set(passedArgs,"skillName",skillName)]
+    [h:passedArgs=json.set(passedArgs,"powerPointMethod",powerPointMethod)]
+    [h:passedArgs=json.set(passedArgs,"startingPowerPoints",startingPowerPoints)]
+    [h:passedArgs=json.set(passedArgs,"startingPowers",startingPowers)]
+    [h:passedArgs=json.set(passedArgs,"backlash",backlash)]
+    [h:passedArgs=json.set(passedArgs,"backlashRoll",backlashRoll)]
+    [h:passedArgs=json.set(passedArgs,"backlashEffect",backlashEffect)]
+    [h:passedArgs=json.set(passedArgs,"powerList",powerList)]
+
+    [h: linkit=macroLinkText("DefineABWizard@Lib:Rules", "gm",passedArgs)]
+
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GL(skillName)]</td><td>
+    [r:startPowStr]</td><td>
+    [r:blStr]</td><td>
+    [r,if(allFlag==1), code:{ [r:GL("All Powers")]</td> };{ [r,foreach(p,powerList,","): GL(p)]</td>}]
+  };
+  case "DerivedStats": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigStatsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GD(pre+i+"~desc")]</td>
+    <td>[h:d=pre+i+"~desc"][h:def=pre+i+"~default"][h:form=pre+i+"~formula"][r:default=GSP(def)]</td>
+    <td>[r:formula=GSP(form)]</td>
+  };
+  case "Skills": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigSkillsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td>
+    <td>[h:d=pre+i+"~desc"] [r:GD(d)]</td>
+    <td>[h:def=pre+i+"~default"][r:default=GSP(def)]</td>
+    <td> [h:attr=pre+i+"~attr"][r:linkedAttribute=GSP(attr)]</td>
+  };
+  case "OtherStats": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigStatsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GD(pre+i+"~desc")]</td>
+    <td>[h:d=pre+i+"~desc"][h:def=pre+i+"~default"][h:form=pre+i+"~formula"][r:default=GSP(def)]</td>
+    <td>[r:formula=GSP(form)]</td>
+  };
+  case "Rolls": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigRollsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GD(pre+i+"~desc")]</td>
+    <td>[h:form=pre+i+"~formula"][r:formula=GSP(form)]</td>
+  };
+  case "Powers": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigPowersWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GD(pre+i+"~desc")]</td>
+  };
+  case "Gear": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigGearWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td>
+    <td>[r:GD(pre+i+"~desc")]</td>
+    <td>
+      [h:vis=pre+lower(i)+"~visible"][h:visible=GSP(vis)][r:v=if(visible=="checked","V","")]
+    </td>
+    <td>[h:cat = pre+lower(i)+"~category"][r:ca=GSP(cat)]</td>
+    <td>[h:cst = pre+lower(i)+"~cost"][r:cs=GSP(cst)]</td>
+    <td>[h:w = pre+lower(i)+"~weight"][r:we=GSP(w)]</td>
+  };
+  case "WeaponActions": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigWeaponActionsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td>
+    <td>[r:GD(pre+i+"~desc")]</td>
+    <td>[h:rolls=pre+lower(i)+"~rolls"][r:rolls=GSP(rolls)]</td>
+    <td>[h:traitMod=pre+lower(i)+"~traitMod"][r:traitMod=GSP(traitMod)]</td>
+    <td>[h:damageMod=pre+lower(i)+"~damageMod"][r:damageMod=GSP(damageMod)]</td>
+    <td>[h:ammo=pre+lower(i)+"~ammo"][r:ammo=GSP(ammo)]</td>
+  };
+  default : { 
+    <td> 
+    [h:d=pre+i+"~desc"]
+    [h:m=pre+i+"~mod~.*"]
+    [h:a=pre+i+"~add~.*"]
+    [h:r=pre+i+"~rep~.*"]
+
+    [macro("GetConfigEffectsJSON@Lib:Rules"):str=json.append("",m,a,r)]
+    [h:jeffs=macro.return]
+
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+
+    [h: linkit=macroLinkText("EditConfigItemWizard@Lib:Rules", "gm",passedArgs)]
+     
+    <a href="[r:linkit]">[r:GL(i)]</a></td>
+    <td>[r:GD(d,GSTN())]</td>
+    <td>
+      [h:jmods=json.get(jeffs,"mods")]
+      [r,foreach(j,jmods,"<BR>"): json.get(j,"name") + if(startsWith(json.get(j,"value"),"-") || startsWith(json.get(j,"value"),"+")," "," +") + json.get(j,"value")]    
+    </td>
+    <td>
+      [h:jmods=json.get(jeffs,"adds")]
+      [r,foreach(j,jmods,"<BR>"): json.get(j,"name")]    
+    </td>
+    <td>
+      [h:jmods=json.get(jeffs,"reps")]
+      [r,foreach(j,jmods,"<BR>"): json.get(j,"name") +" "+ json.get(j,"value")]    
+    </td>
+  }]
+
+!!
+@@ @ResetEffect
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=3;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[r:macro.args]<br>
+[h:prop=json.get(macro.args,"prop")]
+[h:name=json.get(macro.args,"name")]
+[h:type=json.get(macro.args,"type")]
+[h:macroName=json.get(macro.args,"macroName")]
+
+[r:resets=json.append("",json.get(macro.args,"reset"))]
+[r,foreach(re,resets), code:{
+  [h:p=json.get(re,"prop")]
+  [h:passedArgs=json.set("","prop",p,"value","")]
+  [h,macro("SettingPropUpdate@this"):passedArgs]
+}]
+
+[h:passedArgs=json.set("","step",0,"prop",prop,"name",name,"type",type)]
+[h,macro(macroName): passedArgs]
+
+{"reset":"j","prop":"r~atlantean","name":"atlantean","type":"Races","macroName":"EditConfigItemWizard@this","Rest":"Remove Effect"}
+
+!!
+@@ @SettingConfigure
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=2;color=default;playerEditable=false;applyToSelected=false;group=5.4 - Setting Configures;tooltip=;minWidth=
+[h:list=arg(0)]
+[h:class="oddRow"]
+<table width="100%">
+[r,foreach(l,list,"</option>"), code:{
+  <tr class=[r:class=FC(class)]><td>[h:linkIt=macroLinkText("EditConfigItems@this","gm",l)]
+  [r:line="<a href='"+linkIt+"'>"+GL(l)+"</a>"]</td><td>[r:listSort(GSP(l),"A")]</td></tr>
+}] 
+</table>
+
+!!
+@@ @ABGetSkillTypeList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+[r:a="Use Power Name as Skill,Custom Skill Name,Select from Skill List, None"]
+
+!!
+@@ @ABPowerPointMethodList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+[r:a="Power Point Pool, Power Points per Power, Does Not Use Power Points"]
+
+!!
+@@ @ABSelectPowers
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=2;color=default;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+[h:settingPowers=decode(getLibProperty("Powers",GSTN()))]
+[h:powerList=arg(0)]
+[r,foreach(s,settingPowers,", "), code:{
+  <input type='checkbox' [r:str=if(listContains(powerList,s)>0,"checked","")]  name='cb_[r:s]'  value='[r:s]'>[r:GL(s)]</input>
+}]
+
+!!
+@@ @DefineABWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+<B>PASSED ARGS [r:macro.args]</B><br>
+[h,if(json.type(macro.args)=="UNKNOWN"): macro.args=json.set("","step",0)]
+[h:step=json.get(macro.args,"step")]
+[h:step=if(step=="",0,step)]
+
+[h:ABName=json.get(macro.args,"ABName")]
+[h:type=json.get(macro.args,"type")]
+[h:step=if(ABName=="",0,step)]
+
+[h:skillNameType=decode(json.get(macro.args,"skillNameType"))]
+[h:skillName=json.get(macro.args,"skillName")]
+[h:powerPointMethod=decode(json.get(macro.args,"powerPointMethod"))]
+[h:startingPowerPoints=json.get(macro.args,"startingPowerPoints")]
+[h:startingPowers=json.get(macro.args,"startingPowers")]
+[h:backlash=json.get(macro.args,"backlash")]
+[h:backlashRoll=json.get(macro.args,"backlashRoll")]
+[h:backlashEffect=json.get(macro.args,"backlashEffect")]
+[h:powerList=json.get(macro.args,"powerList")]
+[h:labelName=json.get(macro.args,"labelName")]
+[h:labelName=if(labelName=="",ABName,labelName)]
+
+[h:macroName = getMacroName()+"@this"]
+
+[r:a="Use Power Name as Skill,Custom Skill Name,Select from Skill List, None"]
+[h,if(step==1), code:{
+  [h:skillNameInput=""]
+  [if(skillNameType=="Custom Skill Name"): skillNameInput="<tr><td>"+GL("Skill Name")+"</td<td><input type='text' name='skillName' value='"+skillName+"'/></td></tr>"]
+  [if(skillNameType=="Select from Skill List"): skillNameInput="<tr><td>"+GL("Skill Name")+"</td<td><select name='skillName'>"+DropdownFromList(skillName,GetSkillList())+"</select>"]
+  [h:backlashInput=""]
+  [if(backlash=="Yes"): backlashInput="<tr><td>"+GL("Backlash Occurs on Roll of")+"</td<td><input type='text' name='backlashRoll' size='2' value='"+backlashRoll+"'/></td></tr> <tr><td>"+GL("Backlash Effect")+"</td<td><input type='text' name='backlashEffect' value='"+backlashEffect+"'/></td></tr>"]
+  [if(powerPointMethod=="Does Not Use Power Points"): ppmInput=""; ppmInput="<tr><td>"+GL("Starting Power Points")+"</td<td><input type='text' size='2' name='startingPowerPoints' value='"+startingPowerPoints+"'/></td></tr>"]
+
+}]
+<br><b>JUST BEFORE DIALOG</B> [r:step]<br>Skill Name Type [r:skillNameType]<BR>
+[dialog(getMacroName(),"width=300; height=200"): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Define Acrane Background - Step ")][r:step+1] [r:GL(ABName)]</h1>
+  [r,if(step==0), code:{
+    <form name="DefineAB" method='json' action="[r:macroLinkText("DefineABWizard@this","gm")]">
+      <table>
+       <tr><td>[r:GL("Label Name")]</td><td><input type="text" name="labelName" size="40" value="[r:GL(ABName)]"/></td></tr>
+       <tr><td>[h:list=ABGetSkillTypeList()][r:GL("Arcane Skill Naming Method")]</td><td><select name="skillNameType">[r:str=DropdownFromList(skillNameType,list)]</select></td></tr>
+      <tr><td>[h:list=ABPowerPointMethodList()][r:GL("Power Point Method")]</td><td><select name="powerPointMethod">[r:str=DropdownFromList(powerPointMethod,list)]</select></td></tr>
+      <tr><td>[r:GL("Has Backlash?")]</td><td><select name="backlash">[r:str=DropdownFromList(backlash,"Yes,No")]</select></td></tr>
+      <tr><td>[r:GL("Starting Powers")]</td><td><select name="startingPowers">[r:str=DropdownFromList(startingPowers,"0,1,2,3,4")]</select></td></tr>
+      <input type="hidden" name="step" value="1">
+      <input type="hidden" name="powerList" value="[r:powerList]">
+      <input type="hidden" name="startingPowerPoints" value="[r:startingPowerPoints]">
+      <input type="hidden" name="skillName" value="[r:skillName]">
+      <input type="hidden" name="backlashRoll" value="[r:backlashRoll]">
+      <input type="hidden" name="backlashEffect" value="[r:backlashEffect]">
+      <input type="hidden" name="ABName" value="[r:ABName]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="submit" value='[r:GL("Next")]'/>
+    </form>    
+  };{}]
+  [r,if(step==1), code:{
+    <form name="Skill NameType" method='json' action="[r:macroLinkText("DefineABWizardOK@this","gm")]">
+      <table><th>Desc</th><th>Value</th><tr>
+      [r:skillNameInput]
+      [r:backlashInput]
+      [r:ppmInput]
+      <tr><td>[r:GL("Select Powers")]</td<td>[r:ABSelectPowers(powerList)]</td></tr>
+      <tr><td>
+      <input type="hidden"  name="ABName" value="[r:ABName]"/>
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="labelName" value="[r:labelName]">
+      <input type="hidden"  name="skillNameType" value="[r:skillNameType]"/>
+      <input type="hidden"  name="startingPowers" value="[r:startingPowers]"/>
+      <input type="hidden"  name="backlash" value="[r:backlash]"/>
+      <input type="hidden"  name="powerPointMethod" value="[r:powerPointMethod]"/>
+      <input type="hidden"  name="powerList" value="[r:powerList]"/>
+      <input type="hidden" name="step" value="1">
+      <input type="hidden" name="macroName" value="[r:macroName]">
+      </td><td>
+      <input type="submit" name="submit" value='[r:GL("Select All")]'/>
+      <input type="submit" name="submit" value='[r:GL("Select None")]'/>
+      <input type="submit" name="submit" value='[r:GL("Previous")]'/>
+      <input type="submit" name="submit" value='[r:GL("Done")]'/>
+      </td></tr></table>
+    </form>    
+  };{}]
+  </body>
+  </html>
+}]
+
+!!
+@@ @DefineABWizardOK
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+[r:macro.args]<br>
+
+[h:skillNameType=json.get(macro.args,"skillNameType")]
+[h:skillName=json.get(macro.args,"skillName")]
+[h:ABName=json.get(macro.args,"ABName")]
+[h:labelName=json.get(macro.args,"labelName")]
+[h,if(labelName!="" && matches(labelName,ABName)==0): SL(ABName,labelName)]
+[h:type=json.get(macro.args,"type")]
+[h:pre=GPP(type)+ABName]
+
+[h:backlash=json.get(macro.args,"backlash")]
+[h:backlashRoll=json.get(macro.args,"backlashRoll")]
+[h:backlashEffect=json.get(macro.args,"backlashEffect")]
+
+[h:powerPointMethod=json.get(macro.args,"powerPointMethod")]
+[h:startingPowerPoints=json.get(macro.args,"startingPowerPoints")]
+[h:startingPowers=json.get(macro.args,"startingPowers")]
+
+[h:powerList=json.get(macro.args,"powerList")]
+
+[h:macroName = json.get(macro.args,"macroName")]
+
+<br>
+Keys are [r:keys=json.fields(macro.args)]
+[h:cbs=""]
+[r:cbs]
+
+[h:submit=json.get(macro.args,"submit")]
+[r,switch(submit), code:
+    case "Select All": { 
+      [h:powerList=decode(getLibProperty("Powers",GSTN()))]
+      [h:macro.args=json.set(macro.args,"powerList",powerList)]
+      [h:passedArgs=macro.args]
+   };
+    case "Select None": { 
+      [h:powerList=cbs]
+      [h:macro.args=json.set(macro.args,"powerList","")]
+      [h:passedArgs=macro.args]
+   };
+    case "Previous": { 
+      [h:macro.args=json.set(macro.args,"step",json.get(macro.args,"step")-1)]
+      [h:passedArgs=macro.args]
+   };
+   default : { 
+     [h,foreach(k,keys,"<br>,"), code:{
+       [h,if(startsWith(k,"cb_")==1): cbs=listAppend(cbs,json.get(macro.args,k))]
+     }]
+     [h:powerList=cbs]
+     [h:macro.args=json.set(macro.args,"powerList",powerList)]
+     [r:SPU(pre+"skillNameType",skillNameType))]
+     [r:SPU(pre+"skillName",skillName))]
+     [r:SPU(pre+"backlash",backlash))]
+     [r:SPU(pre+"backlashRoll",backlashRoll))]
+     [r:SPU(pre+"backlashEffect",backlashEffect))]
+     [r:SPU(pre+"powerPointMethod",powerPointMethod))]
+     [r:SPU(pre+"startingPowerPoints",startingPowerPoints))]
+     [r:SPU(pre+"startingPowers",startingPowers))]
+     [r:SPU(pre+"powerList",powerList))]
+ 
+     [closeDialog(listGet(macroName,0,"@"))]
+     [h:macroName="EditConfigItems@this"]
+     [h:passedArgs="ArcaneBackgrounds"]
+  }
+]
+[macro(macroName):passedArgs]
+
+!!
+@@ @GetABList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.5 - Setting AB;tooltip=;minWidth=
+[r:a=listAppend(a,decode(getLibProperty("ArcaneBackgrounds",GSTN())))]
+
+!!
+@@ @ConfigStatsWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=darkgray;playerEditable=false;applyToSelected=false;group=5.6 - Setting Stats;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[h:macroName = getMacroName()+"@this"]
+[h:d=prop+"~desc"]
+[h:def=prop+"~default"]
+[h:form=prop+"~formula"]
+
+[h:desc=GD(d)]
+[h:default=GSP(def)]
+[h:default=if(default=="",0,default)]
+[h:formula=GSP(form)]
+step [r:step]
+<!-- save based on old step number -->
+[r,switch(step), code:
+  case 1: {
+    [h:SPU(d,json.get(macro.args,"desc"))]
+    [h:SPU(def,json.get(macro.args,"def"))]
+    [h:SPU(form,json.get(macro.args,"form"))]
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  case 2: { 
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  default : { blither2 }
+]
+
+[h:submit=json.get(macro.args,"submit")]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Effect for")] [r:GL(type)] - [r:upper(GL(name),1)] Step [r:step]</h1>
+  [r,if(step==1), code:{
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      [r:GL("Description")]: <input type="text" name="desc" size="40" value="[r:GD(d)]"/><br>
+      [r:GL("Default")]: <select name="def" >[r:DropdownFromList(default,"-2,-1,0,1,2,3,4,5,6,7,8,9,10,d4e,d6e,d8e,d10e,d12e,d4,d6,d8,d10,d12")]</select> <br>
+      [r:GL("Formula")]: <input type="text" name="form" size="40" value="[r:formula]"/><br>
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>    
+  };{}]
+  [r,if(step==2), code:{
+    <h3>[r:GL("Default Value and Formula")]</h3>
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Prev")]'/>
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  </body>
+  </html>
+}]
+
+!!
+@@ @ConfigPowersWizard
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.7 - Setting Powers;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+
+[r:step=json.get(macro.args,"step")]
+[r:prop=json.get(macro.args,"prop")]
+[r:name=json.get(macro.args,"name")]
+[r:type=json.get(macro.args,"type")]
+[h:submit=json.get(macro.args,"submit")]
+
+[h:macroName = getMacroName()+"@this"]
+
+[h:d=prop+"~desc"]
+[h:rng=prop+"~range"]
+[h:dur=prop+"~duration"]
+[h:du = prop+"~units"]
+[h:eff=prop+"~effects"]
+
+[h:effect_desc=""]
+[h:castPP=""]
+[h:maintainPP=""]
+[h:effect=""]
+
+[h:desc=GD(d)]
+[h:range=GSP(rng)]
+[h:duration=GSP(dur)]
+[h:units=GSP(du)]
+[h:effects=decode(getLibProperty(eff,GSTN()))]
+
+[r,switch(step), code:
+  case 1: {
+    [h:SPU(d,json.get(macro.args,"desc"))]
+    [h:SPU(rng,json.get(macro.args,"range"))]
+    [h:SPU(dur,json.get(macro.args,"duration"))]
+    [h:SPU(du,json.get(macro.args,"units"))]
+  };
+  case 2: { 
+    [h:e=""]
+    [h:e=json.set(e,"desc",json.get(macro.args,"effect_desc"))]
+    [h:e=json.set(e,"castPP",json.get(macro.args,"effectPP2Cast"))]
+    [h:e=json.set(e,"maintainPP",json.get(macro.args,"effectPP2Maintain"))]
+    [h:e=json.set(e,"effect",json.get(macro.args,"effect"))]
+    [h:effects=json.append(effects,e)]
+    [h:SPU(eff,effects)]
+    [h:step=0]
+  };
+  default : { blither2 }
+]
+
+[h:submit=if(submit==GL("Save"),"save",submit)]
+[h:submit=if(submit==GL("Remove Effect"),"remove",submit)]
+[h:submit=if(submit==GL("Add Effect"),"next",submit)]
+[h:submit=if(submit==GL("Edit Effect"),"edit",submit)]
+[h:submit=if(submit==GL("Next"),"next",submit)]
+[h:submit=if(submit==GL("Prev"),"prev",submit)]
+[h,switch(submit), code:
+  case "next": { 
+    [h:step=step+1]
+  };
+  case "prev": { 
+    [h:step=step-1]
+  };
+  case "save": { 
+    [h:step=step]
+    [h:closeDialog(getMacroName())]
+    calling "EditConfigItems@this" [r:type]
+    [h,macro("EditConfigItems@this"):type]
+    [h:abort(0)]
+  };
+  case "remove": { 
+    [h:step=step]
+    [h:remove=json.get(macro.args,"remove_effect")]
+    [h,if(remove!=""), code:{
+      [h:effects=json.remove(effects,remove)]
+      [h:SPU(eff,effects)]
+    };{}]
+  };
+  case "edit": { 
+    [h:step=step+1]
+    [h:num=json.get(macro.args,"remove_effect")]
+    [h:e=json.get(effects,num)]
+    [h:effect_desc=json.get(e,"desc")]
+    [h:castPP=json.get(e,"castPP")]
+    [h:maintainPP=json.get(e,"maintainPP")]
+    [h:effect=json.get(e,"effect")]
+  };
+  default : { 
+    [h:step=step+1]
+  }
+]
+
+[dialog(getMacroName()): {
+  <html>
+  <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
+  <body>
+  <h1>[r:GL("Define")] [r:GL(type)] - [r:upper(GL(name),1)] Step [r:step]</h1>
+  [r,if(step==1), code:{
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <table>
+      <tr><td>[r:GL("Description")]</td><td><input type="text" name="desc" size="40" value="[r:GD(d)]"/></td></tr>
+      <tr><td>[r:GL("Range")]</td><td><input type="text" name="range" size="10" value="[r:range]"/></td></tr>
+      <tr><td>[r:GL("Duration")]</td><td><input type="text" name="duration" size="3" value="[r:Duration]"/> <select name="Units" >[r:DropdownFromList(units,"Instant, Rounds, Minutes, Hours, Days, Permenant")]</select></td></tr>
+      </table>
+      [macro("PowerEffectTable@this"):effects]
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Save")]'/>
+      <input type="submit" name="submit" value='[r:GL("Remove Effect")]'/>
+      <input type="submit" name="submit" value='[r:GL("Add Effect")]'/>
+      <input type="submit" name="submit" value='[r:GL("Edit Effect")]'/>
+    </form>    
+  };{}]
+  [r,if(step==2), code:{
+    <h3>[r:GL("Default Value and Formula")]</h3>
+    <form name="EditDescr" method='json' action="[r:macroLinkText(macroName,"gm")]">
+      <table>
+        <tr><td>[r:GL("Effect Description")]</td><td><input type="text" name="effect_desc" size="40" value="[r:effect_desc]" /></td></tr>
+        <tr><td>[r:GL("PP to Cast")]</td><td><input type="text" name="effectPP2Cast" size="2" value="[r:castPP]"/></td></tr>
+        <tr><td>[r:GL("PP to Maintain")]</td><td><input type="text" name="effectPP2Maintain" size="2" value="[r:maintainPP]" /></td></tr>
+        <tr><td>[r:GL("Effect")]</td><td><input type="text" name="effect" size="40" value="[r:effect]"/></td></tr>
+      </table>
+      <input type="hidden" name="prop" value="[r:prop]"/>
+      <input type="hidden" name="name" value="[r:name]">
+      <input type="hidden" name="type" value="[r:type]">
+      <input type="hidden" name="step" value="[r:step]">
+      <input type="submit" name="submit" value='[r:GL("Prev")]'/>
+      <input type="submit" name="submit" value='[r:GL("Next")]'/>
+    </form>
+  };{}]
+  </body>
+  </html>
+}]
+
+!!
+@@ @PowerEffectTable
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=1;color=default;playerEditable=false;applyToSelected=false;group=5.7 - Setting Powers;tooltip=;minWidth=
+[h:effects=macro.args]
+[h:cnt=0]
+<table width="100%" border="1">
+<tr><th>*</th><th>Description</th><th>PP to Cast</th><th>PP to Maintain</th><th>Effect</th></tr>
+[r,foreach(e,effects,"</tr>"), code:{
+  <tr><td><input type="radio" name="remove_effect" value="[r:cnt]"/> 
+  <td>[r:d=GL(json.get(e,"desc"))]</td>
+  <td>[r:castPP=json.get(e,"castPP")]</td>
+  <td>[r:maintainPP=json.get(e,"maintainPP")]</td>
+  <td>[r:effect=json.get(e,"effect")][h:cnt=cnt+1]</td>
+}]
+</table>
+
+!!
+@@ @TableFromJSON
+@PROPS@ fontColor=green;autoExecute=true;fontSize=1.00em;sortBy=;color=white;playerEditable=false;applyToSelected=false;group=5.7 - Setting Powers;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:headings=arg(0)]
+[h:json=arg(1)]
+[h:cnt=0]
+[h:width=""]
+[h:border=""]
+[h:radioName=""]
+[h,if(json.length(macro.args)>2): width="width='"+arg(2)+"'"]
+[h,if(json.length(macro.args)>3): border="border='"+arg(3)+"'"]
+[h,if(json.length(macro.args)>4): radioName=arg(4)]
+
+[h:class="oddRow"]
+<table [r:border] [r:width] ><tr>
+  [r,if(radioName!=""), code:{
+    <th>*</th> 
+  };{}]
+[r,foreach(h,headings,"</th>"): "<th>"+upper(h,1)]
+</tr>
+[r,foreach(j,json,"</tr>"), code:{
+  <tr class=[r:class=FC(class)]>
+  [r,if(radioName!=""), code:{
+    <input type='radio' name='[r:radioName]' value='[r:cnt]'/> 
+  };{}]
+  [r,foreach(h,headings,"</td>"): "<td>"+json.get(j,h)]
+}]
+</table>
+
+!!
+@@ @ABSkillNameTypeDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+[h:current=arg(0)]
+[h:list="Use Power Name as Skill,Custom Skill Name,Select from Skill List, None"]
+[r,foreach(l,list,""), code:{
+    [h:selected=if(l==current,"selected","")]
+    <option value="[r:l]" [r:selected]>[r:GL(l)]</option>
+}]
+
+!!
+@@ @AttrAddDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+[h,macro("GetAddible@this"):""]
+[h:list=macro.return]
+[h:keys=json.fields(list)]
+[r,foreach(k,keys,""), code:{
+  [h:alist=json.get(list,k)]
+  [h:alist=listSort(alist,"A")]
+  [h:prefix=GPP(k)]
+  [r,foreach(l,alist,"</option>"), code:{
+    [h:value=prefix+l]
+    <option value="[r:value]">[r:GL(k)]-[r:GL(l)]</option>
+  }]
+}]
+
+!!
+@@ @AttrModDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+[h,macro("GetModifiable@this"):""]
+[h:list=macro.return]
+[h:keys=json.fields(list)]
+[r,foreach(k,keys,""), code:{
+  [h:alist=json.get(list,k)]
+  [h:alist=listSort(alist,"A")]
+  [h:prefix=GPP(k)]
+  [r,foreach(l,alist,"</option>"), code:{
+    [h:value=prefix+l]
+    <option value="[r:value]">[r:GL(k)]-[r:GL(l)]</option>
+  }]
+}]
+
+!!
+@@ @AttrRepDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+[h,macro("GetReplacable@this"):""]
+[h:list=macro.return]
+[h:keys=json.fields(list)]
+[r,foreach(k,keys,""), code:{
+  [h:alist=json.get(list,k)]
+  [h:alist=listSort(alist,"A")]
+  [h:prefix=GPP(k)]
+  [r,foreach(l,alist,"</option>"), code:{
+    [h:value=prefix+l]
+    <option value="[r:value]">[r:GL(k)]-[r:GL(l)]</option>
+  }]
+}]
+
+!!
+@@ @ConditionalDropDown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<option value="A" selected="yes">[r:GL("Always")]</option>
+<option value="C">[r:GL("Conditional")] ( [r:GL("Enter Text")])</option>
+<option value="S">[r:GL("When Token Has State")]([r:GL("Select State")])</option>
+<option value="N">[r:GL("When Token Does NOT Have State")]([r:GL("Select State")])</option>
+
+!!
+@@ @DefaultDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<option value="0">0</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="d4e">d4e</option>
+<option value="d6e">d6e</option>
+<option value="d8e">d8e</option>
+<option value="d10e">d10e</option>
+<option value="d12e">d12e</option>
+<option value="d4">d4</option>
+<option value="d6">d6</option>
+<option value="d8">d8</option>
+<option value="d10">d10</option>
+<option value="d12">d12</option>
+
+!!
+@@ @GetAddible
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<!-- this returns a list of affectable items in a json object with string lists inside -->
+[h:a=""]
+[h:a=json.set(a,"Edges",decode(getLibProperty("Edges",GSTN())))]
+[h:a=json.set(a,"MajorHindrances",decode(getLibProperty("MajorHindrances",GSTN())))]
+[h:a=json.set(a,"MinorHindrances",decode(getLibProperty("MinorHindrances",GSTN())))]
+[h:a=json.set(a,"ArcaneBackgrounds",decode(getLibProperty("ArcaneBackgrounds",GSTN())))]
+[h:a=json.set(a,"MonstrousAbilities",decode(getLibProperty("MonstrousAbilities",GSTN())))]
+[h:a=json.set(a,"Movements",decode(getLibProperty("Movements",GSTN())))]
+[h:macro.return=a]
+
+!!
+@@ @GetCombatStatesDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+[h:list=decode(getLibProperty("CombatStates",GSTN()))]
+[h:list=listSort(list,"A")]
+[r:str="<option selected='Yes' value=''>"+GL("No")+"</option>"]
+[r,foreach(l,list,"</option>"): "<option value='"+l+"'>"+GL(l)]
+
+!!
+@@ @GetModifiable
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<!-- this returns a list of affectable items in a json object with string lists inside -->
+[h:a=""]
+[h:a=json.set(a,"Attributes",decode(getLibProperty("Attributes",GSTN())))]
+[h:a=json.set(a,"Skills",decode(getLibProperty("Skills",GSTN())))]
+[h:a=json.set(a,"DerivedStats",decode(getLibProperty("DerivedStats",GSTN())))]
+[h:a=json.set(a,"OtherStats",decode(getLibProperty("OtherStats",GSTN())))]
+[h:a=json.set(a,"Resistance/Vulnerability",decode(getLibProperty("Trappings",GSTN())))]
+[h:a=json.set(a,"Movements",decode(getLibProperty("Rolls",GSTN())))]
+[h:a=json.set(a,"Rolls",decode(getLibProperty("Rolls",GSTN())))]
+[h:macro.return=a]
+
+!!
+@@ @GetReplacable
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<!-- this returns a list of affectable items in a json object with string lists inside -->
+[h:a=""]
+[h:a=json.set(a,"Attributes",decode(getLibProperty("Attributes",GSTN())))]
+[h:a=json.set(a,"Skills",decode(getLibProperty("Skills",GSTN())))]
+[h:a=json.set(a,"DerivedStats",decode(getLibProperty("DerivedStats",GSTN())))]
+[h:a=json.set(a,"OtherStats",decode(getLibProperty("OtherStats",GSTN())))]
+[h:macro.return=a]
+
+!!
+@@ @ModiferDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<option value="-4">-4</option>
+<option value="-3">-3</option>
+<option value="-2">-2</option>
+<option value="-1">-1</option>
+<option value="1">+1</option>
+<option value="2" selected="yes">+2</option>
+<option value="3">+3</option>
+<option value="4">+4</option>
+<option value="6">+6</option>
+<option value="8">+8</option>
+<option value="-3d">-3d</option>
+<option value="-2d">-2d</option>
+<option value="-1d">-1d</option>
+<option value="1d">+1d</option>
+<option value="2d">+2d</option>
+<option value="3d">+3d</option>
+<option value="+d4e">+d4e</option>
+<option value="+d6e">+d6e</option>
+<option value="+d8e">+d8e</option>
+<option value="+d10e">+d10e</option>
+<option value="+d12e">+d12e</option>
+<option value="+d4">+d4</option>
+<option value="+d6">+d6</option>
+<option value="+d8">+d8</option>
+<option value="+d10">+d10</option>
+<option value="+d12">+d12</option>
+
+!!
+@@ @ReplacerDropdown
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.8 - Setting Dropdowns;tooltip=;minWidth=
+<option value="-4">-4</option>
+<option value="-3">-3</option>
+<option value="-2">-2</option>
+<option value="-1">-1</option>
+<option value="0">0</option>
+<option value="1">1</option>
+<option value="2" >2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="d4e">d4e</option>
+<option value="d6e">d6e</option>
+<option value="d8e">d8e</option>
+<option value="d10e">d10e</option>
+<option value="d12e">d12e</option>
+<option value="d4">d4</option>
+<option value="d6">d6</option>
+<option value="d8">d8</option>
+<option value="d10">d10</option>
+<option value="d12">d12</option>
+
+!!
+@@ @EditProperty
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:property=arg(0)]
+[r:property]<br>
+[h:value=decode(getLibProperty(property))]
+[r:value]
+[h:input("value|"+value+"|"+property)]
+[h:value=encode(value)]
+[r:value]
+[h:setLibProperty(property,value)]
+[macro("Manage Setting@this"):"LangsAndLabels"]
+
+!!
+@@ @FlipClass
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:class=arg(0)]
+[h:class = if(class=="oddRow", "evenRow", "oddRow")]
+[h:macro.return=class]
+
+!!
+@@ @GetDescription
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<!-- This macro sets the default value of a Description of Enter Description. It's mostly here so I won't forget to add it. -->
+[h:p=arg(0)]
+[h:v=p+"_text"]
+[h:d=GL(v)]
+[h,if(d==v), code:{
+  [h:d="Enter Description"]
+  [h:setLibProperty(d,v,GSTN())]
+  [h:SL(v,d)]
+};{}]
+[h:macro.return=d]
+
+!!
+@@ @GetLabel
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=8;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:label=arg(0)]
+[h:lang=GLL()]
+[h:propName="l~"+lang+"~"+label]
+[h:rtn=getLibProperty(propName)]
+[h,if(rtn==""), code:{ [setLibProperty(propName,label)] [rtn=label]};{}]
+[h:rtn=decode(rtn)]
+[h:macro.return=rtn]
+
+!!
+@@ @GetLabelLanguage
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<!-- aliased to GLL() -->
+[h:lang=getLibProperty("FrameworkLanguage")]
+[h:lang=if(lang=="","en",lang)]
+[h:macro.return=lang]
+
+!!
+@@ @GetSettingProp
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:prop=arg(0)]
+[h:v=""]
+[h,if(endsWith(prop,"~desc")), code:{
+ [v=GL(prop+"_text",value)]
+};{
+ [h:v=decode(getLibProperty(prop,GSTN()))]
+}]
+[h:v=if(v=="","",v)]
+[h:macro.return=string(v)]
+
+!!
+@@ @GetSettingPropRaw
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:prop=macro.args]
+[h:v=""]
+[h,if(endsWith(prop,"~desc")), code:{
+ [v=GL(prop+"_text",value)]
+};{
+ [h:v=decode(getLibProperty(prop,GSTN()))]
+}]
+[h:t=GSTN()]
+[h:macro.return=v]
+
+!!
+@@ @GetSettingTokenName
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=99;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<!-- aliased to GSTN() -->
+[h:st=getLibProperty("SettingToken")]
+[h:st=if(st=="","Setting",st)]
+[h:st="Lib:"+st]
+[h:macro.return=st]
+
+!!
+@@ @GetSettingTraitList
+@PROPS@ fontColor=green;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:list=GSP("Attributes")]
+[h:list=listAppend(list,GSP("Skills"))]
+[h:list=listAppend(list,GSP("KnowledgeSkills"))]
+[h:list=listAppend(list,GSP("ArcaneSkills"))]
+[r:list]
+
+!!
+@@ @GetSkillList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:a=""]
+[h:a=listAppend(a,decode(getLibProperty("Skills",GSTN())))]
+[h:a=listAppend(a,decode(getLibProperty("KnowledgeSkills",GSTN())))]
+[h:a=listAppend(a,decode(getLibProperty("ArcaneSkills",GSTN())))]
+[h:macro.return=a]
+
+!!
+@@ @GetTokenModifiers
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=maroon;playerEditable=true;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<!-- used to add a modifier to a token given a setting property -->
+[h:id=arg(0)]
+
+[h:thingsThatModify=json.append("","Races", "Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "Gear", "Powers", "CombatStates", "AttackActions", "Gear")]
+
+[h:thingsThatGetModified=json.append("","Attributes", "Skills", "DerivedStats", "KnowledgeSkills", "ArcaneSkills", "Movements", "OtherStats", "Rolls")]
+
+[h:strPropList=json.append("","Attributes", "Skills", "KnowledgeSkills", "ArcaneSkills", "Rolls")]
+[h:stringList=json.append("","DerivedStats", "Movements", "OtherStats")]
+
+[h:setPropList="[]"]
+[h,foreach(m,thingsThatModify,""), code:{
+  [h:tlist=getProperty(m,id)]
+  [h:there=json.contains(strPropList,m)]
+  [if(there==1), code:{
+    [h:tlist=json.fromStrProp(tlist)]
+    [h:tlist=json.fields(tlist)]
+  };{
+    [h:tlist=json.fromList(tlist)]
+  }]
+  [h:modList=GSP(m,GSTN())]
+  [h:modList=json.fromList(modList)]
+  [h:modList=json.intersection(modList,tlist)]
+  [h,foreach(ml,modList,""), code:{
+    [h:type=GPP(m)]
+    [h:pattern=type+lower(ml)+"~add~.*"]
+    [h:mp=getMatchingLibProperties(pattern,GSTN())]
+
+    [h:mp=json.fromList(mp)]
+    [h,if(json.length(mp)!=0): setPropList=json.union(setPropList,mp)]
+
+    [h:pattern=type+lower(ml)+"~rep~.*"]
+    [h:mp=getMatchingLibProperties(pattern,GSTN())]
+
+    [h:mp=json.fromList(mp)]
+    [h,if(json.length(mp)!=0): setPropList=json.union(setPropList,mp)]
+
+    [h:pattern=type+lower(ml)+"~mod~.*"]
+    [h:mp=getMatchingLibProperties(pattern,GSTN())]
+
+    [h:mp=json.fromList(mp)]
+    [h,if(json.length(mp)!=0): setPropList=json.union(setPropList,mp)]
+  }]
+}]
+[h:setPropList=json.remove(setPropList,0)]
+[r:setPropList]
+
+!!
+@@ @GetTokenProp
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:prop=arg(0)]
+[h:id=arg(1)]
+[h:v=""]
+[h,if(endsWith(prop,"~desc")), code:{
+ [v=GL(prop+"_text",value)]
+};{
+ [h:v=decode(getProperty(prop,id))]
+}]
+[h:v=if(v=="","",v)]
+[h:macro.return=v]
+
+!!
+@@ @ManageLists
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:labelLists=arg(0))]
+[h:returnMacro=arg(1)]
+[r,foreach(l,labelLists,"<br>"), code:{
+  [h:lowerWindowMacro="Edit"+l+"Form@this"]
+  [r,macro(lowerWindowMacro):""]
+}]
+
+!!
+@@ @SetLabel
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=8;color=default;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+[h:label=arg(1)]
+[h:id=arg(0)]
+[h:lang=GLL()]
+[h:propName="l~"+lang+"~"+id]
+[setLibProperty(propName,encode(label))]
+
+!!
+@@ @SetTokenProp
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<br> Prop Update for [r:getName()]
+[h:jsonType=json.type(macro.args)]
+[r,switch(jsonType), code:
+    case "ARRAY": { 
+      prop [r:prop=arg(0)]
+      value [r:value=arg(1)]
+      id [r:id=arg(2)]
+   };
+    case "OBJECT": { 
+      prop [r:prop=json.get(macro.args,"prop")]
+      value [r:value=json.get(macro.args,"value")]
+      id [r:id=json.get(macro.args,"value")]
+   };
+   default : { [assert(0),"Unknown JSON type passed to SettingPropUpdate")] }
+]
+
+[r,if(endsWith(prop,"~desc")), code:{
+ Sending to lables
+ [SL(prop+"_text",value)]
+};{
+ Sending to properties
+ [h:v=setProperty(prop,encode(value),id)]
+}]
+
+!!
+@@ @SettingProp2TokenModifer
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=maroon;playerEditable=true;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<!-- used to add a modifier to a token given a setting property -->
+<!-- sets the mods property that will be looped through later to update stuff -->
+[h:id=arg(0)]
+[h:settingProp=arg(1)]
+[h:settingPropValue=GSP(arg(1))]
+
+[h:tokenPropertyName="mods"]
+
+[h:switchToken(id)]
+[h:tokenMods=getProperty(tokenPropertyName,id)]
+[h:tokenMods=if(string(tokenMods)=="","{}",tokenMods)]
+
+<!-- parse setting prop name -->
+[h:list=SPLIT(settingProp,"~")]
+[h,if(json.length(list)==5), code:{
+  [h:modType=json.get(list,0)]
+  [h:tokenPropType=json.get(list,3)]
+  [h:tokenProp=json.get(list,4)]
+  [h:tokenMods=json.set(tokenMods,settingProp,settingPropValue)]
+  [h:setProperty(tokenPropertyName,tokenMods,id)]
+};{
+did not enter parsing branch for [r:list]<br>
+}]
+
+!!
+@@ @SettingPropUpdate
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=gray;playerEditable=false;applyToSelected=false;group=5.9 - Functions;tooltip=;minWidth=
+<br> Prop Update
+[h:jsonType=json.type(macro.args)]
+[r,switch(jsonType), code:
+    case "ARRAY": { 
+      prop [r:prop=arg(0)]
+      value [r:value=arg(1)]
+   };
+    case "OBJECT": { 
+      prop [r:prop=json.get(macro.args,"prop")]
+      value [r:value=json.get(macro.args,"value")]
+   };
+   default : { [assert(0),"Unknown JSON type passed to SettingPropUpdate")] }
+]
+
+[r,if(endsWith(prop,"~desc")), code:{
+ Sending to lables
+ [SL(prop+"_text",value)]
+};{
+ Sending to properties
+ [h:v=setLibProperty(prop,encode(value),GSTN())]
+}]
+
+!!
+@@ @CheckBoxList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:prop=arg(1)]
+[h:settingPowers=listSort(decode(getLibProperty(prop,GSTN())),"A")]
+[h:powerList=arg(0)]
+[r,foreach(s,settingPowers,", "), code:{
+  <input type='checkbox' [r:str=if(listContains(powerList,s)>0,"checked","")]  name='cb_[r:s]'  value='[r:s]'>[r:GL(s)]</input>
+}]
+
+!!
+@@ @DropdownFromList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:current=arg(0)]
+[h:list=arg(1)]
+
+[r,foreach(l,list,""), code:{
+    [h:selected=if(l==current,"selected","")]
+    <option value="[r:l]" [r:selected]>[r:GL(l)]</option>
+}]
+
+!!
+@@ @TableHeader
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:columns=arg(0)]
+<tr>
+[r,foreach(col,columns,""): "<th>"+col+"</th>"]
+</tr>
+
+!!
+@@ @TableHeaderFromJSONObject
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:obj=arg(0)]
+[h:keys=json.fields(obj)]
+<tr>
+[r,foreach(col,keys,""): "<th>"+col+"</th>"]
+</tr>
+
+!!
+@@ @TableRow
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:columns=arg(0)]
+<tr>
+[r,foreach(col,columns,""): "<td>"+col+"</td>"]
+</tr>
+
+!!
+@@ @TableRowFromJSONObject
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=6.0 - HTML Functions;tooltip=;minWidth=
+[h:obj=arg(0)]
+[h:keys=json.fields(obj)]
+<tr>
+[r,foreach(col,keys,""): "<td>"+json.get(obj,col)+"</td>"]
+</tr>
+
+!!
+@@ @CSS
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+.oddRow { background-color: #c4d9ea }
+.evenRow { background-color: #e7eced }
+body {background-color: b0c7cf} 
+th { background-color: #5c8b9f; color: #23325f; text-align:left }
+h1 { text-align: center } 
+input.radio { background : #b0c7cf; color: #000000; }
+
+!!
+@@ @Debug
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:var=arg(0)]
+[h:label=arg(1)]
+[h:a=abort(input("junk|"+var+"|"+label))]
+
+!!
+@@ @DiceMath
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=green;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:base=arg(0)]
+[h:list=arg(1)]
+[h:id=strfind(base,"(\\d*)d(\\d*)(e*)([+-]*\\d*)")]
+[h: fc=getFindCount(id)]
+
+[h,if(fc>0), code:{
+  [h:numDie=getGroup(id, 1, 1)]
+  [h:numDie=if(numDie=="",1,numDie)]
+  [h:dieType=getGroup(id, 1, 2)]
+  [h:exp=getGroup(id, 1, 3)]
+  [h:mod=getGroup(id, 1, 4)]
+};{
+  [h:numDie=0]
+  [h:dieType=0]
+  [h:mod=base]
+  [h:exp=""]
+}]
+[h:mod=if(mod=="",0,mod)]
+[h:modStr=if(mod>=0,"+","")]
+[h:otherDie=""]
+[h,foreach(l,list,""), code:{
+  [h,if(matches(l,"[+-]*\\d*d")), code:{
+     [h:id2=strfind(l,"([+-]*\\d*)d")]
+     [h:dieType=dieType+getGroup(id2, 1, 1)*2]
+     [h:mod=mod+if(dieType>12,(dieType-12)/2,0)]
+     [h:dieType=if(dieType>12,12,dieType)]
+  };{}]
+  [h,if(matches(l,"[+-]*\\d")), code:{
+    [h:mod=mod+l]
+  };{}]
+  [h,if(matches(l,"\\d*d\\d+e*[+-]*\\d*")), code:{
+    [h:otherDie=listAppend(otherDie,l)]
+  };{}]
+}]
+[h,if(fc==1), code:{
+  [h:numDie=if(numDie==1,"",numDie)]
+  [h:evalStr=numDie+"d"+dieType+exp]
+  [h,if(mod!=0): evalStr=evalStr+modStr+mod]
+  [h,foreach(od,otherDie): evalStr=evalStr+"+"+od]
+};{
+  [h:evalStr=mod]
+}]
+[h:evalStr=replace(evalStr,"\\+-","-")]
+
+[r:macro.return=evalStr]
+
+!!
+@@ @DiceMathTest
+@PROPS@ fontColor=white;autoExecute=true;fontSize=1.00em;sortBy=;color=green;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:base="d6"]
+[h:list="1"]
+[h:id=strfind(base,"(\\d*)d(\\d*)(e*)([+-]*\\d*)")]
+[h: fc=getFindCount(id)]
+
+[h,if(fc>0), code:{
+  [h:numDie=getGroup(id, 1, 1)]
+  [h:numDie=if(numDie=="",1,numDie)]
+  [h:dieType=getGroup(id, 1, 2)]
+  [h:exp=getGroup(id, 1, 3)]
+  [h:mod=getGroup(id, 1, 4)]
+};{
+  [h:numDie=0]
+  [h:dieType=0]
+  [h:mod=base]
+  [h:exp=""]
+}]
+[h:mod=if(mod=="",0,mod)]
+[h:modStr=if(mod>=0,"+","")]
+[h:otherDie=""]
+[h,foreach(l,list,""), code:{
+  [h,if(matches(l,"[+-]*\\d*d")), code:{
+     [h:id2=strfind(l,"([+-]*\\d*)d")]
+     [h:dieType=dieType+getGroup(id2, 1, 1)*2]
+     [h:mod=mod+if(dieType>12,(dieType-12)/2,0)]
+     [h:dieType=if(dieType>12,12,dieType)]
+  };{}]
+  [h,if(matches(l,"[+-]*\\d")), code:{
+    [h:mod=mod+l]
+  };{}]
+  [h,if(matches(l,"\\d*d\\d+e*[+-]*\\d*")), code:{
+    [h:otherDie=listAppend(otherDie,l)]
+  };{}]
+}]
+[h,if(fc==1), code:{
+  [h:numDie=if(numDie==1,"",numDie)]
+  [h:evalStr=numDie+"d"+dieType+exp]
+  [h,if(mod!=0): evalStr=evalStr+modStr+mod]
+  [h,foreach(od,otherDie): evalStr=evalStr+"+"+od]
+};{
+  [h:evalStr=mod]
+}]
+
+[r:macro.return=evalStr]
+
+!!
+@@ @DieNum
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:die=arg(0)]
+[h:dieValues=DD(die)]
+[h:val=json.get(dieValues,"Num") * json.get(dieValues,"Type")]
+[h,if( json.get(dieValues,"Type") > 11): val=val+json.get(dieValues,"Mod")]
+[r:val]
+
+!!
+@@ @SortList
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:list=arg(0)]
+[h:sortBy=arg(1)]
+[h:list=json.fromList(list)]
+[h:list=json.sort(list,sortBy)]
+[r:list=json.toList(list)]
+
+!!
+@@ @Split
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:str=json.get(macro.args,0)]
+[h:cutter=json.get(macro.args,1)]
+[h:len=length(str)]
+[h:cutterLen=length(cutter)]
+[h:rtn=0]
+[h:idx=0]
+[h:end=0]
+[h:rtnList=""]
+[h:end=indexOf(str,cutter)]
+[h,if(end==-1), code:{
+  [h:rtnList=json.append(rtnList,str)]
+}; {}]
+[h,while(end!=-1,"<br>"), code:{
+  [h:end=indexOf(str,cutter,idx)]
+  [h,if(end==-1), code:{
+    [h:rtnList=json.append(rtnList,substring(str,idx))]
+  }; {
+    [h:rtnList=json.append(rtnList,substring(str,idx,end))]
+    [h:idx=end+cutterLen]
+  }]
+}]
+[r:rtnList]
+
+!!
+@@ @adjustDie
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[h:die=arg(0)]
+[h:mod=arg(1)]
+
+!!
+@@ @disectDie
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+<!-- this macro is supposed to take in a die expression and pass back the number of dice, die type, and die mod -->
+[h:expr=json.get(macro.args,0)]
+[h:mod=0]
+[h:numDie=1]
+[h:dieType=""]
+[h:ace=""]
+
+[if(indexOf(expr,"e")>-1), code:{
+  [h:temp=SPLIT(expr,"e")]
+  [h:dieType=json.get(temp,0)]
+  [h:mod=json.get(temp,1)]
+  [h:mod=if(mod=="",0,mod)]
+  [h:ace="e"]
+}; {
+[if(indexOf(expr,"+")>-1), code:{
+  [h:temp=SPLIT(expr,"+")]
+  [h:dieType=json.get(temp,0)]
+  [h:mod=json.get(temp,1)]
+};{}]
+[if(indexOf(expr,"-")>-1), code:{
+  [r:temp=SPLIT(expr,"-")]
+  [h:dieType=string(json.get(temp,0))]
+  [h:mod=0-json.get(temp,1)]
+};{}]
+}]
+[h:dieType=if(dieType=="",expr,dieType)]
+[if(indexOf(expr,"d")>-1), code:{
+  [h:ar=SPLIT(dieType,"d")]
+  [h:numDie=json.get(ar,0)]
+  [h:numDie=if(numDie=="",1,numDie)]
+  [h:dieType=json.get(ar,1)]
+};{
+  [h:numDie=dieType]
+  [h:dieType=""]
+}]
+
+[h:rtn=json.set("","Num",numDie,"Type",dieType,"Ace",ace,"Mod",mod)]
+[r:macro.return=rtn]
+
+!!
+@@ @splito
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+[h: id = strfind("This is a really useless test", "(\\S+)\\s+(\\S+)\\s*")]
+[r: getGroupCount(id)]
+[r: getFindCount(id)]
+[r: getGroup(id, 1, 1)]
+[r: getGroup(id, 2, 2)]
+<br>
+[h: id = strfind("2d8e+4", "[0-9][0-9]*(d)[0-9][0-9]*([+-])[0-9][0-9]*")]
+[r: getGroupCount(id)]
+[r: getFindCount(id)]
+
+!!
