@@ -532,6 +532,7 @@ C=conditional text to display
 <!-- e~acrobat~mod~a~agility=2,C,for nimbleness based agility rolls -->
 
 [h:finalList]
+
 [h,foreach(l,finalList,""),code:{
 
   [h:splitit=SPLIT(l,"~")]
@@ -540,13 +541,19 @@ C=conditional text to display
   [h:modifier=decode(getLibProperty(l,GSTN()))]
 
   [h:modifier=json.fromList(modifier)]
-
   [h:len=json.length(modifier)]
+
   [h:condModLabel="A"]
+
+[if(len!=0), code:{
   [h:conModValue=json.get(modifier,0)]
+};{
+  [h:conModValue=0]
+}]
+
   [h,if(len>1): condModLabel=json.get(modifier,1)]
   [h,if(len>2): condModText=json.get(modifier,2)]
-  
+
   [h,switch(condModLabel):
    case "C": conditional=json.set(conditional,type+":"+typeName,conModValue+" "+condModText);
    case "N":  
