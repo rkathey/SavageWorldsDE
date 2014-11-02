@@ -1,5 +1,5 @@
 @@ @onCampaignLoad
-@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=orange;playerEditable=false;applyToSelected=false;group=x;tooltip=;minWidth=
 [defineFunction("GSTN", "GetSettingTokenName@Lib:Rules"),ignoreOutput]
 [defineFunction("GL", "GetLabel@Lib:Rules"),ignoreOutput]
 [defineFunction("SL", "SetLabel@Lib:Rules"),ignoreOutput]
@@ -69,6 +69,7 @@
 
 <!-- Character Sheet Functions -->
 [defineFunction("GetStateList","GetStateList@lib:Rules")]
+[defineFunction("CheckCombatStates","CheckCombatStates@lib:Rules")]
 [defineFunction("TraitWithState","TraitWithState@lib:Rules")]
 [defineFunction("RecomputeTokenTraits","RecomputeTokenTraits@lib:Rules")]
 [defineFunction("TraitTest","TraitTest@lib:Rules")]
@@ -108,11 +109,12 @@ Google Docs:<br>
 [h:td1="<th>"]
 [h:td2="<td>"]
 
-[dialog(getMacroName(),"width=500; height=200"): {
+[dialog(getMacroName() + " : "+getName(),"width=500; height=200"): {
   <html>
     <link rel="stylesheet" type="text/css" href="CSS@Lib:Rules">
     <body>
       <h1>
+        <img src='[r:getTokenImage(50)]'></img>
         [r:getName(id)] 
         [r,foreach(state,states,""), code:{ <img src='[r:getStateImage(state,20)]' alt="[r:state]"></img> }]
       </h1>  
@@ -197,9 +199,18 @@ Rolls | Gear
                [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value]</a>
                }]
              </td></tr>
-             <tr><td>Actions</td><td>[r,foreach(prop,settingAttackActions,", "), code:{
-               [r:GL(prop)]
+             <tr><td>Attack Actions</td><td>
+               [r,foreach(prop,settingAttackActions,", "), code:{
+                 [r:GL(prop)]
                }]
+
+             </td></tr>
+             <tr><td>Combat States</td><td>
+             [h:tokenStates=""]
+             [h,foreach(l,CheckCombatStates(),"<br>"), code:{
+               [h,if(getState(l,id)):tokenStates=listAppend(tokenStates,l)]
+             }]
+             [r:CheckBoxList(tokenStates,"CombatStates")]
              </td></tr>
            </table>
          </td>
@@ -348,7 +359,7 @@ Rolls | Gear
 [h:tokenAttrs=decode(getProperty("Attributes",id))]
 [h:tokenSkills=decode(getProperty("Skills",id))]
 [h:traitRollMacro="TraitTest@this"]
-[h:traitRollArgs=json.set("","id",id,"numRolls",4)]
+[h:traitRollArgs=json.set("","id",id,"numRolls",1)]
 
 <!-- weed unskilled -->
 [h,foreach(prop,settingSkills,"</tr><tr>"), code:{
@@ -368,7 +379,7 @@ Rolls | Gear
              <tr><td>Attributes</td><td>[r,foreach(prop,settingAttrs,", "), code:{
                [h:traitRollArgs=json.set(traitRollArgs,"rollType",prop)]
                [h:linkit=macroLinkText(traitRollMacro, audience,traitRollArgs)]
-               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value=getStrProp(tokenAttrs,prop)]</a>
+               [r:GL(prop)]&nbsp<a href="[r:linkit]">[r:value=getProperty(prop,id)]</a>
                }]
              </td></tr>
              <tr><td>Skills</td><td>[r,foreach(prop,settingSkills,", "), code:{
@@ -461,6 +472,36 @@ Rolls | Gear
 <input type="hidden" name="id" value='[r:id]'>
 <input type="hidden" name="rtnMacroName" value="[r:rtnMacroName]">
 </form>
+
+!!
+@@ @CheckCombatStates
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=1.2 - Character Sheet Functions;tooltip=;minWidth=
+<!-- it's very important to keep Combat States and MapTool States in sync -->
+
+[h: combatStates = json.sort(getTokenStates("json", "Combat"))]
+[h: allStates=json.append("","Combat",combatStates)]
+[h: list=combatStates]
+
+[h: conditionStates=json.sort(getTokenStates("json", "Condition"))]
+[h: allStates=json.append(allStates,"Condition",ConditionStates)]
+[h: list=json.merge(list,conditionStates)]
+
+[h: coverStates=json.sort(getTokenStates("json", "Cover"))]
+[h: allStates=json.append(allStates,"Cover",coverStates)]
+[h: list=json.merge(list,coverStates)]
+
+[h: lightingStates=json.sort(getTokenStates("json", "Lighting"))]
+[h: allStates=json.append(allStates,"Lighting",lightingStates)]
+[h: list=json.merge(list,lightingStates)]
+
+[h:settingStates=json.sort(json.fromList(GSP("CombatStates")))]
+[h: equal=json.isSubset(list,settingStates)]
+[h,if(equal!=1), code:{
+  [r,foreach(l,settingStates,"<br>"): l + if(json.contains(list,l)," is present"," is NOT present")]
+  [h,assert(equal,"  <br>There is a problem with the campaign setup. The one or more of the Setting Combat States are not defined in MapTool. Please add this state under the MapTool menu Edit->Campaign Preferences->States. It needs to be added to either the Combat, Cover, Condition, or Lighting group<br>"]
+};{}]
+
+[r:list]
 
 !!
 @@ @GetGearByCategory
@@ -593,8 +634,10 @@ C=conditional text to display
   [h:modifier=decode(getLibProperty(l,GSTN()))]
   [h:modifier=json.fromList(modifier)]
   [h:len=json.length(modifier)]
-  [h:conModValue=json.get(modifier,0)]
-  [h,if(conModvalue!=""): rollModifiers=json.set(rollModifiers,typeName,conModValue)]
+  [h,if(len!=0), code:{
+    [h:conModValue=json.get(modifier,0)]
+    [h,if(conModvalue!=""): rollModifiers=json.set(rollModifiers,typeName,conModValue)]
+  };{}]
 }]
 
 [r:rtn=json.append("",rollModifiers,conditional)]
@@ -917,15 +960,19 @@ C=conditional text to display
 [h,foreach(p,states,""): stateMatchList=listAppend(stateMatchList,pre+lower(p)+lower(pattern))]
 
 [h:rollModifiers=0]
+
 [h,foreach(l,stateMatchList,"<BR>"), code:{
   [h:splitit=SPLIT(l,"~")]
   [h:type=GTFP(json.get(splitit,0))]
   [h:typeName=upper(json.get(splitit,1),1)]
-
   [h:modifier=decode(getLibProperty(l,GSTN()))]
   [h:modifier=json.fromList(modifier)]
   [h:len=json.length(modifier)]
-  [h:conModValue=json.get(modifier,0)]
+  [h,if(len!=0), code:{
+    [conModValue=json.get(modifier,0)]
+  };{
+    [conModvalue=""]
+  }]
   [h,if(conModvalue!=""), code:{
     [h:rollModifiers=DiceMath(rollModifiers,conModvalue)]
   };{}]
@@ -935,7 +982,7 @@ C=conditional text to display
 [h:w=if(json.contains(states,"Wound1"),-1,w)]
 [h:w=if(json.contains(states,"Wound2"),-2,w)]
 [h:w=if(json.contains(states,"Wound3"),-3,w)]
-[if(w!=0 && finder!="ds"), code:{
+[h,if(w!=0 && finder!="ds"), code:{
   [h:w=w-getProperty("WoundMod",id)]
   [h:w=if(w>0,0,w)]
   [h:rollModifiers=DiceMath(rollModifiers,w)]
@@ -943,12 +990,13 @@ C=conditional text to display
 [h:f=0]
 [h:f=if(json.contains(states,"Fatigue1"),-1,f)]
 [h:f=if(json.contains(states,"Fatigue2"),-2,f)]
-[if(f!=0 && finder!="ds"), code:{
+[h,if(f!=0 && finder!="ds"), code:{
   [h:f=if(f>0,0,f)]
   [h:rollModifiers=listAppend(rollModifiers,f,"+")]
 };{}]
 [h:rollModifiers]
 [h:roll=getProperty(rollType,id)]
+
 [r:DiceMath(roll,rollModifiers)]
 
 !!
@@ -985,6 +1033,7 @@ C=conditional text to display
     [h,foreach(k,keys), code:{
       [r,if(startsWith(k,"cb_") && race=='Creature'): monstrousAbilities=listAppend(monstrousAbilities,json.get(macro.args,k))]
     }]   
+    [h:monstrousAbilities=json.toList(json.sort(json.unique(json.fromList(monstrousAbilities))))]
     [h:setProperty("MonstrousAbilities",monstrousAbilities,id)]
   };
   case 2: { 
@@ -992,7 +1041,7 @@ C=conditional text to display
     [h:keys=json.fields(macro.args)]
     [h,foreach(k,keys), code:{
       [h,if(startsWith(k,"cb_")): edges=listAppend(edges,json.get(macro.args,k))]
-    }]   
+    }]
     [h:setProperty("Edges",edges,id)]
   };
   case 3: { 
@@ -1200,6 +1249,50 @@ C=conditional text to display
   };{}]
   </body>
   </html>
+}]
+
+!!
+@@ @ComputeMovements
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:numArgs=json.length(macro.args)]
+<!-- 
+0 = id
+1 = 
+2 = 
+3 = 
+4 = 
+5 = 
+-->
+[h,if(json.type(macro.args)=="ARRAY"), code:{
+[h:id=arg(0)]
+
+};{
+
+  [h:assert(0,"non Jason array passed to "+getMacroName())]
+
+}]
+
+!!
+@@ @ComputeMovements
+@PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=true;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
+<br>[r:getMacroName()] - [r:macro.args]<br>
+[h:numArgs=json.length(macro.args)]
+<!-- 
+0 = id
+1 = 
+2 = 
+3 = 
+4 = 
+5 = 
+-->
+[h,if(json.type(macro.args)=="ARRAY"), code:{
+[h:id=arg(0)]
+
+};{
+
+  [h:assert(0,"non Jason array passed to "+getMacroName())]
+
 }]
 
 !!
@@ -1623,6 +1716,7 @@ step [r:step=if(step=="",0,step)]
 @PROPS@ fontColor=black;autoExecute=true;fontSize=1.00em;sortBy=;color=default;playerEditable=false;applyToSelected=false;group=3 - Tokens;tooltip=;minWidth=
 [h:id=arg(0)]
 [h:type=arg(1)]
+
 [h:props=decode(getLibProperty(type,GSTN()))]
 [h:tokenValues=decode(getProperty(type,id))]
 [h:firstTime=1]
@@ -1637,7 +1731,11 @@ step [r:step=if(step=="",0,step)]
     [h:cnt=listCount(mod)]
     [h,if(cnt==1): modList=listAppend(modList,mod)]
   }]
-  [h:finalValue=DiceMath(value,modList)]
+
+  [h,if(type=="Skills"&&value=="d4e-2"): tempValue="d2e";tempValue=value]
+  [h:finalValue=DiceMath(tempValue,modList)]
+  [h,if(type=="Skills"&&finalValue=="d2e"): finalValue="d4e-2"]
+
   [h:setProperty(p,finalValue,id)]
   [h:semi=if(firstTime==1,"",";")]
   [h:firstTime=0]
@@ -1698,7 +1796,7 @@ step [r:step=if(step=="",0,step)]
 
 [h:mainLabelNames = json.append("","ManageLists","LangsAndLabels","Configuration")]
 
-[h:configList=json.append("","Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "ArcaneBackgrounds", "Races", "DerivedStats", "OtherStats", "Rolls", "Powers", "Gear", "Skills", "CombatStates", "WeaponActions")]
+[h:configList=json.append("","Edges", "MajorHindrances", "MinorHindrances", "MonstrousAbilities", "ArcaneBackgrounds", "Races", "DerivedStats", "OtherStats", "Rolls", "Powers", "Gear", "Skills", "CombatStates", "WeaponActions", "Movements")]
 [h:configList=json.sort(configList)]
 
 [h:lowerWindowMacro="Edit"+selected+"Form@this"]
@@ -3484,6 +3582,11 @@ step [r:step]
      [h:pre="cs~"] 
      [h:type="CombatStates"]
    };
+    case "Movements": { 
+     [h:list=decode(getLibProperty(item,GSTN()))] 
+     [h:pre="mv~"] 
+     [h:type="Movements"]
+   };
    default : { blither }
 ]
 [h:list=listSort(list,"A")]
@@ -3672,6 +3775,19 @@ EditConfigItems list [r:list]<br>
     [r,if(allFlag==1), code:{ [r:GL("All Powers")]</td> };{ [r,foreach(p,powerList,","): GL(p)]</td>}]
   };
   case "DerivedStats": {
+    <td> 
+    [h:p=pre+lower(i)+"~"]
+    [h:passedArgs=json.set("","name",i)]
+    [h:passedArgs=json.set(passedArgs,"prop",pre+i)]
+    [h:passedArgs=json.set(passedArgs,"type",type)]
+    [h:passedArgs=json.set(passedArgs,"step",0)]
+    [h: linkit=macroLinkText("ConfigStatsWizard@Lib:Rules", "gm",passedArgs)]
+    <a href="[r:linkit]">[r:GL(i)]</a></td><td>
+    [r:GD(pre+i+"~desc")]</td>
+    <td>[h:d=pre+i+"~desc"][h:def=pre+i+"~default"][h:form=pre+i+"~formula"][r:default=GSP(def)]</td>
+    <td>[r:formula=GSP(form)]</td>
+  };
+  case "Movements": {
     <td> 
     [h:p=pre+lower(i)+"~"]
     [h:passedArgs=json.set("","name",i)]
@@ -4407,7 +4523,7 @@ step [r:step]
 [h:a=json.set(a,"DerivedStats",decode(getLibProperty("DerivedStats",GSTN())))]
 [h:a=json.set(a,"OtherStats",decode(getLibProperty("OtherStats",GSTN())))]
 [h:a=json.set(a,"Resistance/Vulnerability",decode(getLibProperty("Trappings",GSTN())))]
-[h:a=json.set(a,"Movements",decode(getLibProperty("Rolls",GSTN())))]
+[h:a=json.set(a,"Movements",decode(getLibProperty("Movements",GSTN())))]
 [h:a=json.set(a,"Rolls",decode(getLibProperty("Rolls",GSTN())))]
 [h:macro.return=a]
 
@@ -4451,6 +4567,8 @@ step [r:step]
 <option value="+d8">+d8</option>
 <option value="+d10">+d10</option>
 <option value="+d12">+d12</option>
+<option value="x0.5">*.5</option>
+<option value="x2.0">*2</option>
 
 !!
 @@ @ReplacerDropdown
@@ -4635,6 +4753,7 @@ step [r:step]
   }]
 }]
 [h:setPropList=json.remove(setPropList,0)]
+[Debug(setPropList,"setPropList")]
 [r:setPropList]
 
 !!
